@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SoilDeviceMapper">
+
+    <resultMap type="com.sixin.iot.domain.SoilDevice" id="SoilDeviceResult">
+        <result property="did" column="did"/>
+        <result property="dname" column="dname"/>
+        <result property="dstatus" column="dstatus"/>
+        <result property="dv" column="dv"/>
+        <result property="dctime" column="dctime"/>
+        <result property="dftime" column="dftime"/>
+        <result property="dcname" column="dcname"/>
+        <result property="dfname" column="dfname"/>
+        <result property="note" column="note"/>
+    </resultMap>
+
+    <sql id="table">
+        did,dname,dstatus,dv,dctime,dftime,dcname,dfname,note
+    </sql>
+
+   <select id="selectbyid" parameterType="String" resultMap="SoilDeviceResult">
+       SELECT
+       <include refid="table"/>
+       FROM tb_device where did=#{did}
+   </select>
+
+    <select id="selectall" resultMap="SoilDeviceResult">
+        select did,dname,dstatus,dv,dctime,dftime,dcname,dfname,note
+        from tb_device
+    </select>
+    <select id="selectbyname" parameterType="String" resultMap="SoilDeviceResult">
+       select <include refid="table"/>
+      from  tb_device where dname=#{dname}
+    </select>
+    <insert id="add" parameterType="com.sixin.iot.domain.SoilDevice">
+         INSERT INTO tb_device (did,dname,dstatus,dv,dctime,dftime,dcname,dfname,note) VALUES (#{did},#{dname},${dstatus},${dv},#{dctime}
+         ,#{dftime},#{dcname},#{dfname},#{note})
+    </insert>
+    <delete id="deletebyname" parameterType="String">
+        delete  from tb_device where
+        dname=#{dname} or did=#{dname}
+    </delete>
+<select id="selectbynote" resultMap="SoilDeviceResult">
+  select
+          count(dstatus) as count,
+          2 as isnomal
+        from
+         tb_device
+        union
+        select
+          count(dstatus) as count,
+         dstatus
+        from
+         tb_device
+        where dstatus = 1
+        union
+        select
+          count(dstatus) as count,
+          dstatus
+        from
+        tb_device
+        where dstatus = 0
+        group by dstatus
+  order by isnomal desc
+</select>
+    <select id="selectbyds" resultMap="SoilDeviceResult">
+       select sum(did!=0) as dev,sum(dstatus=1) as run,sum(dstatus=0) as stop from tb_device
+    </select>
+</mapper>

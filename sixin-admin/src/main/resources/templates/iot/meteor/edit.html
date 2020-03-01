@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-meteor-edit" th:object="${meteor}">
+        <input id="weather_id" name="weather_id" type="hidden" th:field="*{weather_id}"/><div class="form-group">
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">监测时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="datetime-local" name="monitortime" id="monitortime" th:field="*{monitortime}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">监测地点：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="location" id="location" th:field="*{location}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">风力：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="windpower" id="windpower" th:field="*{windpower}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">风向：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="winderaction" id="winderaction" th:field="*{winderaction}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">降雨量：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="raincapacity" id="raincapacity" th:field="*{raincapacity}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">温度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="temperature" id="temperature" th:field="*{temperature}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">湿度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="humidity" id="humidity" th:field="*{humidity}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">空气质量等级：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="airlevel" id="airlevel" th:field="*{airlevel}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">更新时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="datetime-local" name="updatetime" id="updatetime" th:field="*{updatetime}">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/meteor";
+
+    $("#form-meteor-edit").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-meteor-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

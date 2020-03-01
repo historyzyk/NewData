@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.MeteorMapper">
+    <resultMap type="com.sixin.iot.domain.Meteor" id="MeteorResult">
+        <id property="weather_id"    column="weather_id"    />
+        <result property="monitortime"    column="monitortime"    />
+        <result property="location"    column="location"    />
+        <result property="windpower"    column="windpower"    />
+        <result property="winderaction"    column="winderaction"    />
+        <result property="raincapacity"    column="raincapacity"    />
+        <result property="temperature"  column="temperature"  />
+        <result property="humidity" column="humidity" />
+        <result property="airlevel" column="airlevel" />
+        <result property="updatetime" column="updatetime" />
+    </resultMap>
+    <!--定义selecMeteor为查询整表命令-->
+    <sql id="selectMeteor">
+    select weather_id,monitortime,location,windpower,winderaction,raincapacity,temperature,humidity,airlevel,updatetime from iot_Meteor
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_Meteor
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectMeteorList" parameterType="com.sixin.iot.domain.Meteor" resultMap="MeteorResult">
+        <include refid="selectMeteor"/>
+        <where>
+            <if test="weather_id != null and weather_id != ''">
+                AND weather_id like concat('%', #{weather_id}, '%')
+            </if>
+            <if test="monitortime != null and monitortime != ''">
+                AND monitortime like concat('%', #{monitortime}, '%')
+            </if>
+            <if test="location != null and location != ''">
+                AND location like concat('%', #{location}, '%')
+            </if>
+            <if test="windpower != null and windpower != ''">
+                AND windpower like concat('%', #{windpower}, '%')
+            </if>
+            <if test="winderaction != null and winderaction != ''">
+                AND winderaction like concat('%', #{winderaction}, '%')
+            </if>
+            <if test="raincapacity != null and raincapacity != ''">
+                AND raincapacity like concat('%', #{raincapacity}, '%')
+            </if>
+            <if test="temperature != null and temperature != ''">
+                AND temperature like concat('%', #{temperature}, '%')
+            </if>
+            <if test="humidity != null and humidity != ''">
+                AND humidity like concat('%', #{humidity}, '%')
+            </if>
+            <if test="airlevel != null and airlevel != ''">
+                AND airlevel like concat('%', #{airlevel}, '%')
+            </if>
+            <if test="updatetime != null and updatetime != ''">
+                AND updatetime like concat('%', #{updatetime}, '%')
+            </if>
+        </where>
+        <!--<where>
+            <if test="weather_id != null and weather_id='' "> and weather_id = #{weather_id}</if>
+            <if test="monitortime!= null  and monitortime!= '' "> and monitortime= #{monitortime}</if>
+            <if test="location != null  and location != '' "> and location = #{location}</if>
+            <if test="windpower != null  and windpower != '' "> and windpower = #{windpower}</if>
+            <if test="winderaction != null  and winderaction != '' "> and winderaction = #{winderaction}</if>
+            <if test="raincapacity != null  and raincapacity != '' "> and raincapacity = #{raincapacity}</if>
+            <if test="temperature != null  and temperature != '' "> and temperature = #{temperature}</if>
+            <if test="humidity !=null and humidity !='' ">and humidity = #{humidity}</if>
+            <if test="airlevel !=null and airlevel !='' ">and airlevel = #{airlevel}</if>
+        </where>
+        order by weather_id desc
+        -->
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByweather_id" parameterType="String" resultMap="MeteorResult">
+        <include refid="selectMeteor"/>
+        where weather_id=#{weather_id}
+        <!-- select
+         a.weather_id as weather_id,
+         a.monitortime as monitortime,
+         a.location as location,
+         a.windpower as windpower,
+         a.winderaction as winderaction,
+         a.raincapacity as raincapacity
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="weather_id != null  and weather_id != '' ">and a.weather_id like CONCAT(#{weather_id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertMeteor" parameterType="com.sixin.iot.domain.Meteor">
+        insert into iot_Meteor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="weather_id != null and weather_id!='' ">weather_id,</if>
+        <if test="monitortime != null  and monitortime != ''  ">monitortime,</if>
+        <if test="location != null  and location != ''  ">location,</if>
+        <if test="windpower != null  and windpower != ''  ">windpower,</if>
+        <if test="winderaction != null  and winderaction != ''  ">winderaction,</if>
+        <if test="raincapacity != null  and raincapacity != ''  ">raincapacity,</if>
+        <if test="temperature != null and temperature !='' ">temperature,</if>
+        <if test="humidity != null and humidity != '' ">humidity,</if>
+        <if test="airlevel != null and airlevel !='' ">airlevel,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="weather_id != null and weather_id!='' ">#{weather_id},</if>
+        <if test="monitortime != null  and monitortime != ''  ">#{monitortime},</if>
+        <if test="location != null  and location != ''  ">#{location},</if>
+        <if test="windpower != null  and windpower != ''  ">#{windpower},</if>
+        <if test="winderaction != null  and winderaction != ''  ">#{winderaction},</if>
+        <if test="raincapacity != null  and raincapacity != ''  ">#{raincapacity},</if>
+        <if test="temperature !=null and temperature !='' ">#{temperature},</if>
+        <if test="humidity !=null and humidity !='' ">#{humidity},</if>
+        <if test="airlevel !=null and airlevel !=''">#{airlevel},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateMeteor" parameterType="com.sixin.iot.domain.Meteor">
+        update iot_Meteor
+        <set>
+            <if test="weather_id != null and weather_id !=''">weather_id = #{weather_id},</if>
+            <if test="monitortime != null  and monitortime != ''  ">monitortime = #{monitortime},</if>
+            <if test="location != null  and location != ''  ">location = #{location},</if>
+            <if test="windpower != null  and windpower != ''  ">windpower = #{windpower},</if>
+            <if test="winderaction != null  and winderaction != ''  ">winderaction = #{winderaction},</if>
+            <if test="raincapacity != null  and raincapacity != ''  ">raincapacity = #{raincapacity},</if>
+            <if test="temperature !=null and temperature != ''">temperature = #{temperature},</if>
+            <if test="humidity != null and humidity != ''">humidity = #{humidity},</if>
+            <if test="airlevel != null and airlevel !=''">airlevel = #{airlevel},</if>
+            updatetime=sysdate()
+        </set>
+        where weather_id = #{weather_id}
+    </update>
+
+
+    <!--根据id删除-->
+    <delete id="deleteMeteorByid" parameterType="String">
+        delete from iot_Meteor where weather_id = #{weather_id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteMeteorByids" parameterType="String">
+        delete from iot_Meteor where weather_id in
+        <foreach item="weather_id" collection="array" open="(" separator="," close=")">
+            #{weather_id}
+        </foreach>
+    </delete>
+
+</mapper>

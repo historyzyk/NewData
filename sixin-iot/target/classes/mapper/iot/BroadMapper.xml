@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.BroadMapper">
+
+    <resultMap type="com.sixin.iot.domain.Broad" id="BroadResult">
+        <result property="broad_id"    column="broad_id"    />
+        <result property="address"    column="address"    />
+        <result property="statue"    column="statue"    />
+        <result property="runtime"    column="runtime"    />
+        <result property="details"    column="details"    />
+
+    </resultMap>
+
+    <!--定义selectBraod为查询整表命令-->
+    <sql id="selectBroad">
+    select broad_id,address,statue,runtime,details from iot_broad
+    </sql>
+    <!--查询表的列表信息-->
+    <select id="selectBroadList" parameterType="com.sixin.iot.domain.Broad" resultMap="BroadResult">
+        <include refid="selectBroad"/>
+        <where>
+            <if test="broad_id != null and broad_id != ''">
+                AND broad_id like concat('%', #{broad_id}, '%')
+            </if>
+            <if test="statue != null and statue != ''">
+                AND statue = #{statue}
+            </if>
+            <if test="address != null and address != ''">
+                AND address like concat('%', #{address}, '%')
+            </if>
+
+            <if test="details != null and details != ''">
+                AND details like concat('%', #{details}, '%')
+            </if>
+            <if test="runtime != null and runtime != ''">
+                and runtime like concat('%',#{runtime},'%')
+            </if>
+
+
+        </where>
+        <!--<where>
+            <if test="broad_id != null"> and broad_id = #{broad_id}</if>
+            <if test="address != null  and address != '' "> and address = #{address}</if>
+            <if test="statue != null  and statue != '' "> and statue = #{statue}</if>
+            <if test="details != null  and details != '' "> and details = #{details}</if>
+        </where>
+        order by broad_id desc-->
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectBroadByid" parameterType="String" resultMap="BroadResult">
+        <include refid="selectBroad"/>
+        where broad_id=#{broad_id}
+        <!-- select
+         a.broad_id as broad_id,
+         a.location as location,
+         a.statue as statue,
+         a.details as details,
+         a.econdu as econdu
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="broad_id != null  and broad_id != '' ">and a.broad_id like CONCAT(#{broad_id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertBroad" parameterType="com.sixin.iot.domain.Broad">
+        insert into iot_broad
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="broad_id != null and broad_id!='' ">broad_id,</if>
+        <if test="address != null  and address != ''  ">address,</if>
+        <if test="statue != null  and statue != ''  ">statue,</if>
+        <if test="details != null  and details != ''  ">details,</if>
+        runtime
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="broad_id != null and broad_id!='' ">#{broad_id},</if>
+        <if test="address != null  and address != ''  ">#{address},</if>
+        <if test="statue != null  and statue != ''  ">#{statue},</if>
+        <if test="details != null  and details != ''  ">#{details},</if>
+        sysdate()
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateBroad" parameterType="com.sixin.iot.domain.Broad">
+        update iot_broad
+        <set>
+            <if test="broad_id !=null and broad_id !=''">broad_id = #{broad_id},</if>
+            <if test="address != null  and address != ''  ">address = #{address},</if>
+            <if test="statue != null  and statue != ''  ">statue = #{statue},</if>
+            <if test="details != null  and details != ''  ">details = #{details},</if>
+        </set>
+        where broad_id = #{broad_id}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteBroadByid" parameterType="String">
+        delete from iot_broad where broad_id = #{broad_id}
+    </delete>
+
+    <!--批量删除  -->
+    <delete id="deleteBroadByids" parameterType="String">
+        delete from iot_broad where broad_id in
+        <foreach item="broad_id" collection="array" open="(" separator="," close=")">
+            #{broad_id}
+        </foreach>
+    </delete>
+
+</mapper>

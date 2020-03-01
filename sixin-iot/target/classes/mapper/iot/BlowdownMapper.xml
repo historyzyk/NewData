@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.BlowdownMapper">
+    <resultMap type="com.sixin.iot.domain.Blowdown" id="BlowdownResult">
+        <id property="pid"    column="pid"    />
+        <result property="monitortime"    column="monitortime"    />
+        <result property="location"    column="location"    />
+        <result property="hmental"    column="hmental"    />
+        <result property="ph"    column="ph"    />
+        <result property="econdu"    column="econdu"    />
+        <result property="updatetime" column="updatetime" />
+    </resultMap>
+
+    <!--定义selectBlowdown为查询整表命令-->
+    <sql id="selectBlowdown">
+    select pid,monitortime,location,hmental,ph,econdu,updatetime from iot_blowdown
+</sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_led
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectBlowdownList" parameterType="com.sixin.iot.domain.Blowdown" resultMap="BlowdownResult">
+        <include refid="selectBlowdown"/>
+        <where>
+            <if test="pid != null and pid != ''">
+                AND pid like concat('%', #{pid}, '%')
+            </if>
+            <if test="monitortime != null and monitortime != ''">
+                AND monitortime like concat('%', #{monitortime}, '%')
+            </if>
+            <if test="location != null and location != ''">
+                AND location like concat('%', #{location}, '%')
+            </if>
+            <if test="hmental != null and hmental != ''">
+                AND hmental like concat('%', #{hmental}, '%')
+            </if>
+            <if test="ph != null and ph != ''">
+                AND ph like concat('%', #{ph}, '%')
+            </if>
+            <if test="econdu != null and econdu != ''">
+                AND econdu like concat('%', #{econdu}, '%')
+            </if>
+            <if test="updatetime != null and updatetime != ''">
+                AND updatetime like concat('%', #{updatetime}, '%')
+            </if>
+        </where>
+        <!--<where>
+            <if test="pid != null and pid='' "> and pid = #{pid}</if>
+            <if test="location != null  and location != '' "> and location = #{location}</if>
+            <if test="hmental != null  and hmental != '' "> and hmental = #{hmental}</if>
+            <if test="ph != null  and ph != '' "> and ph = #{ph}</if>
+            <if test="econdu != null  and econdu != '' "> and econdu = #{econdu}</if>
+        </where>
+        order by pid desc
+        -->
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="BlowdownResult">
+        <include refid="selectBlowdown"/>
+        where pid=#{pid}
+        <!-- select
+         a.pid as pid,
+         a.location as location,
+         a.hmental as hmental,
+         a.ph as ph,
+         a.econdu as econdu
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="pid != null  and pid != '' ">and a.pid like CONCAT(#{pid},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertBlowdown" parameterType="com.sixin.iot.domain.Blowdown">
+        insert into iot_blowdown
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="pid != null and pid!='' ">pid,</if>
+        <if test="monitortime != null  and monitortime != ''  ">monitortime,</if>
+        <if test="location != null  and location != ''  ">location,</if>
+        <if test="hmental != null  and hmental != ''  ">hmental,</if>
+        <if test="ph != null  and ph != ''  ">ph,</if>
+        <if test="econdu != null  and econdu != ''  ">econdu,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="pid != null and pid!='' ">#{pid},</if>
+        <if test="monitortime != null  and monitortime != ''  ">#{monitortime},</if>
+        <if test="location != null  and location != ''  ">#{location},</if>
+        <if test="hmental != null  and hmental != ''  ">#{hmental},</if>
+        <if test="ph != null  and ph != ''  ">#{ph},</if>
+        <if test="econdu != null  and econdu != ''  ">#{econdu},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateBlowdown" parameterType="com.sixin.iot.domain.Blowdown">
+        update iot_blowdown
+        <set>
+            <if test="pid !=null and pid !=''">pid = #{pid},</if>
+            <if test="monitortime != null  and monitortime != ''  ">monitortime = #{monitortime},</if>
+            <if test="location != null  and location != ''  ">location = #{location},</if>
+            <if test="hmental != null  and hmental != ''  ">hmental = #{hmental},</if>
+            <if test="ph != null  and ph != ''  ">ph = #{ph},</if>
+            <if test="econdu != null  and econdu != ''  ">econdu = #{econdu},</if>
+            updatetime= sysdate()
+        </set>
+        where pid = #{pid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteBlowdownByid" parameterType="String">
+        delete from iot_blowdown where pid = #{pid}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBlowdownByids" parameterType="String">
+        delete from iot_blowdown where pid in
+        <foreach item="pid" collection="array" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+    </delete>
+
+</mapper>

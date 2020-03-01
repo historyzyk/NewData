@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.EnvironlMapper">
+    <resultMap type="com.sixin.iot.domain.Environl" id="EnvironlResult">
+        <id property="hid"    column="hid"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="humidity"    column="humidity"    />
+        <result property="speed"    column="speed"    />
+        <result property="direction"    column="direction"    />
+        <result property="intensity"    column="intensity"    />
+        <result property="pressure"  column="pressure"  />
+        <result property="pm" column="pm" />
+        <result property="ppm" column="ppm" />
+        <result property="status" column="status" />
+    </resultMap>
+
+    <!--定义selectEnvironl为查询整表命令-->
+    <sql id="selectEnvironl">
+    select hid,temperature,humidity,speed,direction,intensity,pressure,pm,ppm,status from iot_environl
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_environl
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectEnvironlList" parameterType="com.sixin.iot.domain.Environl" resultMap="EnvironlResult">
+        <include refid="selectEnvironl"/>
+        <where>
+            <if test="hid != null and hid != ''">
+                AND hid like concat('%', #{hid}, '%')
+            </if>
+            <if test="status != null and status != ''">
+                AND status like concat('%', #{status}, '%')
+            </if>
+            <if test="pressure != null and pressure != ''">
+                AND pressure like concat('%', #{pressure}, '%')
+            </if>
+            <if test="speed != null and speed != ''">
+                AND speed like concat('%', #{speed}, '%')
+            </if>
+            <if test="direction != null and direction != ''">
+                AND direction like concat('%', #{direction}, '%')
+            </if>
+            <if test="temperature != null and temperature != ''">
+                AND temperature like concat('%', #{temperature}, '%')
+            </if>
+            <if test="humidity != null and humidity != ''">
+                AND humidity like concat('%', #{humidity}, '%')
+            </if>
+            <if test="intensity != null and intensity != ''">
+                AND intensity like concat('%', #{intensity}, '%')
+            </if>
+            <if test="pm != null and pm != ''">
+                AND pm like concat('%', #{pm}, '%')
+            </if>
+            <if test="ppm != null and ppm != ''">
+                AND ppm like concat('%', #{ppm}, '%')
+            </if>
+        </where>
+        <!--<where>
+            <if test="hid != null and hid='' "> and hid = #{hid}</if>
+            <if test="temperature!= null  and temperature!= '' "> and temperature= #{temperature}</if>
+            <if test="humidity != null  and humidity != '' "> and humidity = #{humidity}</if>
+            <if test="speed != null  and speed != '' "> and speed = #{speed}</if>
+            <if test="direction != null  and direction != '' "> and direction = #{direction}</if>
+            <if test="intensity != null  and intensity != '' "> and intensity = #{intensity}</if>
+            <if test="pressure != null  and pressure != '' "> and pressure = #{pressure}</if>
+            <if test="pm !=null and pm !='' ">and pm = #{pm}</if>
+            <if test="ppm !=null and ppm !='' ">and ppm = #{ppm}</if>
+            <if test="status !=null and status !='' ">and status = #{status}</if>
+        </where>
+        order by hid desc
+        -->
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="EnvironlResult">
+        <include refid="selectEnvironl"/>
+        where hid=#{hid}
+        <!-- select
+         a.hid as hid,
+         a.temperature as temperature,
+         a.humidity as humidity,
+         a.speed as speed,
+         a.direction as direction,
+         a.intensity as intensity
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="hid != null  and hid != '' ">and a.hid like CONCAT(#{hid},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertEnvironl" parameterType="com.sixin.iot.domain.Environl">
+        insert into iot_environl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hid != null and hid !='' ">hid,</if>
+            <if test="temperature != null  and temperature != ''  ">temperature,</if>
+            <if test="humidity != null  and humidity != ''  ">humidity,</if>
+            <if test="speed != null  and speed != ''  ">speed,</if>
+            <if test="direction != null  and direction != ''  ">direction,</if>
+            <if test="intensity != null  and intensity != ''  ">intensity,</if>
+            <if test="pressure != null and pressure !='' ">pressure,</if>
+            <if test="pm != null and pm != '' ">pm,</if>
+            <if test="ppm != null and ppm !='' ">ppm,</if>
+            <if test="status !=null and status !=''">status,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="hid != null and hid!='' ">#{hid},</if>
+            <if test="temperature != null  and temperature != ''  ">#{temperature},</if>
+            <if test="humidity != null  and humidity != ''  ">#{humidity},</if>
+            <if test="speed != null  and speed != ''  ">#{speed},</if>
+            <if test="direction != null  and direction != ''  ">#{direction},</if>
+            <if test="intensity != null  and intensity != ''  ">#{intensity},</if>
+            <if test="pressure !=null and pressure !='' ">#{pressure},</if>
+            <if test="pm !=null and pm !='' ">#{pm},</if>
+            <if test="ppm !=null and ppm !=''">#{ppm},</if>
+            <if test="status !=null and status !=''">#{status},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateEnvironl" parameterType="com.sixin.iot.domain.Environl">
+        update iot_environl
+        <set>
+            <if test="hid != null and hid !=''">hid = #{hid},</if>
+            <if test="temperature != null  and temperature != ''  ">temperature = #{temperature},</if>
+            <if test="humidity != null  and humidity != ''  ">humidity = #{humidity},</if>
+            <if test="speed != null  and speed != ''  ">speed = #{speed},</if>
+            <if test="direction != null  and direction != ''  ">direction = #{direction},</if>
+            <if test="intensity != null  and intensity != ''  ">intensity = #{intensity},</if>
+            <if test="pressure !=null and pressure != ''">pressure = #{pressure},</if>
+            <if test="pm != null and pm != ''">pm = #{pm},</if>
+            <if test="ppm != null and ppm !=''">ppm = #{ppm},</if>
+            <if test="status !=null and status !='' ">status = #{status},</if>
+        </set>
+        where hid = #{hid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteEnvironlByid" parameterType="String">
+        delete from iot_environl where hid = #{hid}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteEnvironlByids" parameterType="String">
+        delete from iot_environl where hid in
+        <foreach item="hid" collection="array" open="(" separator="," close=")">
+            #{hid}
+        </foreach>
+    </delete>
+
+</mapper>

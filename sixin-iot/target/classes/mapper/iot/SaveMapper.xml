@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SaveMapper">
+    <resultMap type="com.sixin.iot.domain.Save" id="SaveResult">
+        <result property="info_id"    column="info_id"    />
+        <result property="user_adress"    column="user_adress"    />
+        <result property="warnstatus"    column="warnstatus"    />
+        <result property="ray"    column="ray"    />
+        <result property="runtime"    column="runtime"    />
+    </resultMap>
+    <!--定义selectLed为查询整表命令-->
+    <sql id="selectSave">
+    select info_id,user_adress,warnstatus,ray,runtime from iot_save
+    </sql>
+    <!--查询表的所有列表信息-->
+    <select id="selectSaveList" parameterType="com.sixin.iot.domain.Save" resultMap="SaveResult">
+        <include refid="selectSave"/>
+        <where>
+            <if test="info_id != null and info_id != ''">
+                AND info_id like concat('%', #{info_id}, '%')
+            </if>
+            <if test="user_adress != null and user_adress != ''">
+                AND user_adress like concat('%', #{user_adress}, '%')
+            </if>
+            <if test="warnstatus != null and warnstatus != ''">
+               AND warnstatus = #{warnstatus}
+            </if>
+            <if test="ray != null and ray != ''">
+                AND ray = #{ray}
+            </if>
+            <if test="runtime != null and runtime != ''">
+                and runtime like concat('%',#{runtime},'%')
+            </if>
+        </where>
+       <!-- <where>
+            <if test="info_id != null and info_id='' "> and info_id = #{info_id}</if>
+            <if test="user_adress != null  and user_adress != '' "> and user_adress = #{user_adress}</if>
+            <if test="warnstatus != null  and warnstatus != '' "> and warnstatus = #{warnstatus}</if>
+            <if test="ray != null  and ray != '' "> and ray = #{ray}</if>
+        </where>
+        order by info_id desc-->
+
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectSaveByid" parameterType="String" resultMap="SaveResult">
+        <include refid="selectSave"/>
+        where info_id=#{info_id}
+        <!-- select
+         a.info_id as info_id,
+         a.location as location,
+         a.warnstatus as warnstatus,
+         a.ray as ray,
+         a.econdu as econdu
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="info_id != null  and info_id != '' ">and a.info_id like CONCAT(#{info_id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertSave" parameterType="com.sixin.iot.domain.Save">
+        insert into iot_save
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="info_id != null and info_id!='' ">info_id,</if>
+        <if test="user_adress != null  and user_adress != ''  ">user_adress,</if>
+        <if test="warnstatus != null  and warnstatus != ''  ">warnstatus,</if>
+        <if test="ray != null  and ray != ''  ">ray,</if>
+        runtime
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="info_id != null and info_id!='' ">#{info_id},</if>
+        <if test="user_adress != null  and user_adress != ''  ">#{user_adress},</if>
+        <if test="warnstatus != null  and warnstatus != ''  ">#{warnstatus},</if>
+        <if test="ray != null  and ray != ''  ">#{ray},</if>
+        sysdate()
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateSave" parameterType="com.sixin.iot.domain.Save">
+        update iot_save
+        <set>
+            <if test="info_id !=null and info_id !=''">info_id = #{info_id},</if>
+            <if test="user_adress != null  and user_adress != ''  ">user_adress = #{user_adress},</if>
+            <if test="warnstatus != null  and warnstatus != ''  ">warnstatus = #{warnstatus},</if>
+            <if test="ray != null  and ray != ''  ">ray = #{ray},</if>
+        </set>
+        where info_id = #{info_id}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteSaveByid" parameterType="String">
+        delete from iot_save where info_id = #{info_id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteSaveByids" parameterType="String">
+        delete from iot_Save where info_id in
+        <foreach item="info_id" collection="array" open="(" separator="," close=")">
+            #{info_id}
+        </foreach>
+    </delete>
+
+</mapper>

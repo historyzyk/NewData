@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.LEDMapper">
+
+    <resultMap type="com.sixin.iot.domain.LED" id="LEDResult">
+        <result property="led_id"    column="led_id"    />
+        <result property="uid"    column="uid"    />
+        <result property="tid"    column="tid"    />
+        <result property="content"    column="content"    />
+        <result property="stardate"    column="stardate"    />
+        <result property="enddate"    column="enddate"    />
+        <result property="createtime"    column="createtime"    />
+        <result property="effect"    column="effect"    />
+        <result property="color"    column="color"    />
+        <result property="demo"    column="demo"    />
+        <result property="remark"    column="remark"    />
+        <result property="deptId" column="dept_id"/>
+
+    </resultMap>
+
+    <sql id="selectLED">
+    select led_id,uid,tid,content,stardate,enddate,createtime,effect,color,demo,remark from iot_led
+    </sql>
+
+
+
+    <select id="selectLedList" parameterType="com.sixin.iot.domain.LED" resultMap="LEDResult">
+        select led_id,uid,tid,content,stardate,enddate,createtime,effect,color,demo,remark from iot_led,ry.sys_dept d
+        <where>
+        <if test="Led_id != null and Led_id != ''">AND led_id like concat('%', #{Led_id}, '%')</if>
+        <if test="uid != null and uid != ''">AND uid like concat('%', #{uid}, '%')</if>
+        <if test="tid != null and tid != ''">AND tid like concat('%', #{tid}, '%')</if>
+            <if test="remark != null and remark != ''">
+                AND remark = #{remark}
+            </if>
+        <if test="createtime != null and createtime != ''">and createtime like concat('%',#{createtime},'%') </if>
+            <if test="deptId != null and deptId != 0">and iot_led.deptId =#{deptId} </if>
+        and iot_led.dept_id=d.dept_id
+        </where>
+    </select>
+       <!-- <where>
+            <if test="led_id != null "> and led_id = #{led_id}</if>
+            <if test="uid!= null  and uid!= '' "> and uid= #{uid}</if>
+            <if test="tid != null  and tid != '' "> and tid = #{tid}</if>
+            <if test="content != null  and content != '' "> and content = #{content}</if>
+            <if test="stardate != null  and stardate != '' "> and stardate = #{stardate}</if>
+            <if test="effect != null  and effect != '' "> and effect = #{effect}</if>
+
+        </where>
+        order by led_id desc-->
+
+
+
+    <select id="selectLedById" parameterType="String" resultMap="LEDResult">
+        <include refid="selectLED"/>
+        where led_id = #{Led_id}
+    </select>
+
+<!--
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_led
+    </select>-->
+
+
+    <insert id="insertLed" parameterType="com.sixin.iot.domain.LED">
+        insert into iot_led
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="Led_id != null  ">led_id,</if>
+            <if test="uid!= null  and uid!= ''  ">uid,</if>
+            <if test="tid != null  and tid != ''  ">tid,</if>
+            <if test="content != null  and content != ''  ">content,</if>
+            <if test="stardate != null  and stardate != ''  ">stardate,</if>
+            <if test="enddate != null  and enddate != ''  ">enddate,</if>
+            <if test="effect != null  and effect != ''  ">effect,</if>
+            <if test="color != null  and color !=''  ">color,</if>
+            <if test="demo != null  and demo!= ''  ">demo,</if>
+            <if test="remark != null  and remark !=''  ">remark,</if>
+            createtime
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="Led_id != null  ">#{led_id},</if>
+            <if test="uid != null  and uid != ''  ">#{uid},</if>
+            <if test="tid != null  and tid != ''  ">#{tid},</if>
+            <if test="content != null  and content != ''  ">#{content},</if>
+            <if test="stardate != null  and stardate != ''  ">#{stardate},</if>
+            <if test="enddate != null  and enddate != ''  ">#{enddate},</if>
+            <if test="effect != null  and effect != ''  ">#{effect},</if>
+            <if test="color != null  and color != ''  ">#{color},</if>
+            <if test="demo != null  and demo != ''  ">#{demo},</if>
+            <if test="remark != null  and remark != ''  ">#{remark},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+
+    <update id="updateLed" parameterType="com.sixin.iot.domain.LED">
+        update iot_led
+        <set>
+            <if test="content != null and content != ''">content = #{content},</if>
+            <if test="effect != null and effect != ''">effect = #{effect},</if>
+            <if test="color != null and color != ''">color = #{color},</if>
+            <if test="demo != null and demo != ''">demo = #{demo},</if>
+            <if test="remark != null and remark != ''">remark =#{remark},</if>
+            <!-- <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+             update_time = sysdate()-->
+        </set>
+        where led_id = #{led_id}
+    </update>
+
+
+    <!--<delete id="deleteLedById" parameterType="String">
+        delete from iot_led where led_id = #{led_id}
+    </delete>-->
+
+
+    <delete id="deleteLedByIds" parameterType="String">
+        delete from iot_led where led_id in
+        <foreach item="Led_id" collection="array" open="(" separator="," close=")">
+            #{Led_id}
+        </foreach>
+    </delete>
+
+
+</mapper>
+

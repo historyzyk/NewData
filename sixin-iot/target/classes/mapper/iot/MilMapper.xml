@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.MilMapper">
+
+    <resultMap type="com.sixin.iot.domain.EnvirData" id="EnvirDataResult">
+        <result property="id"    column="id"    />
+        <result property="rain"    column="rain"    />
+        <result property="flow"    column="flow"    />
+        <result property="wlevel"    column="wlevel"    />
+        <result property="ph"    column="ph"    />
+        <result property="pm"    column="pm"    />
+        <result property="temp"    column="temp"    />
+        <result property="hum"    column="hum"    />
+        <result property="aid"    column="aid"    />
+        <result property="time"    column="time"    />
+        <result property="remark"    column="remark"    />
+    </resultMap>
+
+
+    <select id="selectMilList" resultMap="EnvirDataResult">
+        select id, rain, flow, wlevel, ph, pm, temp, hum, aid, time, remark from iotdata.env_data order by time desc limit 0,500
+    </select>
+    <select id="selectMilPm" resultMap="EnvirDataResult">
+        select avg(pm)as pm from iotdata.env_data order by time desc limit 0,500
+    </select>
+</mapper>

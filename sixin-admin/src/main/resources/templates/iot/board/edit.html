@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-board-edit" th:object="${board}">
+        <input id="board_id" name="board_id" type="hidden" th:field="*{board_id}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">远程控制开关：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="control" id="control" th:field="*{control}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">自动运行时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="time" name="working" id="working" th:field="*{working}"/>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/board";
+
+    $("#form-board-edit").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-board-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

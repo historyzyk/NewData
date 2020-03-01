@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.MetSumMapper">
+    <resultMap type="com.sixin.iot.domain.MetSum" id="MetCountResult">
+        <result property="rname" column="rname" />
+        <result property="sumhum" column="sumhum"/>
+        <result property="sumrain" column="sumrain"/>
+        <result property="countrain" column="countrain"/>
+        <result property="hum" column="hum"/>
+        <result property="temp" column="temp"/>
+        <result property="sumtemp" column="sumtemp"/>
+        <result property="data" column="data"/>
+    </resultMap>
+
+    <select id="selectHumMet" resultMap="MetCountResult">
+        select
+          hum,
+          count(hum)
+          as sumhum
+        from
+          env_data
+        group by hum
+    </select>
+
+    <select id="selectRainMet" resultMap="MetCountResult">
+        select
+          rname,
+          sum(data)
+          as sumrain,
+          count(rname)
+          as countrain
+        from
+          rain_data
+        group by rname
+    </select>
+
+    <select id="selectSeeMet" resultMap="MetCountResult">
+        select temp,count(temp) as sumtemp from env_data group by temp
+    </select>
+    
+    <select id="selectRiverMet" resultMap="MetCountResult">
+        select rname,data
+        from river_data where rname in
+        (select rname from river_data where rname = '开慧镇')
+    </select>
+</mapper>

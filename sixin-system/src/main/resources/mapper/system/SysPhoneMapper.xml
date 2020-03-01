@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.system.mapper.SysPhoneMapper">
+
+    <resultMap type="SysPhone" id="SysPhoneResult">
+        <result property="pid"        column="pid"       />
+        <result property="phone"      column="phone"     />
+        <result property="uid"      column="uid"     />
+        <result property="uname"      column="uname"     />
+        <result property="rolecode"        column="rolecode"        />
+        <result property="allowid"      column="allowid"     />
+        <result property="allowname"    column="allowname"   />
+        <result property="allowdate"      column="allowdate"     />
+        <result property="reallowid"    column="reallowid"   />
+        <result property="reallowname"        column="reallowname"        />
+        <result property="allowpic"        column="allowpic"        />
+        <result property="remark"        column="remark"        />
+    </resultMap>
+
+    <select id="selectPhonelist" parameterType="SysPhone" resultMap="SysPhoneResult">
+        select pid,phone,uid,uname,rolecode,allowid,allowname,allowdate,reallowid,reallowname,allowpic,remark
+        from sys_phonemanage
+    </select>
+
+    <insert id="insertPhone" parameterType="SysPhone">
+        insert into sys_phonemanage
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+<!--            <if test="pid != null  ">pid,</if>-->
+            <if test="phone != null  ">phone,</if>
+            <if test="uid!= null  and uid!= ''  ">uid,</if>
+            <if test="uname != null  and uname != ''  ">uname,</if>
+            <if test="rolecode != null  and rolecode != ''  ">rolecode,</if>
+            <if test="allowid != null  and allowid != ''  ">allowid,</if>
+            <if test="allowname != null  and allowname != ''  ">allowname,</if>
+            <if test="reallowid != null  and reallowid != ''  ">reallowid,</if>
+            <if test="reallowname != null  and reallowname !=''  ">reallowname,</if>
+            <if test="allowpic != null  and allowpic!= ''  ">allowpic,</if>
+            <if test="remark != null  and remark !=''  ">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+<!--            <if test="pid != null  ">#{pid},</if>-->
+            <if test="phone != null  ">#{phone},</if>
+            <if test="uid!= null  and uid!= ''  ">#{uid},</if>
+            <if test="uname != null  and uname != ''  ">#{uname},</if>
+            <if test="rolecode != null  and rolecode != ''  ">#{rolecode},</if>
+            <if test="allowid != null  and allowid != ''  ">#{allowid},</if>
+            <if test="allowname != null  and allowname != ''  ">#{allowname},</if>
+            <if test="reallowid != null  and reallowid != ''  ">#{reallowid},</if>
+            <if test="reallowname != null  and reallowname !=''  ">#{reallowname},</if>
+            <if test="allowpic != null  and allowpic!= ''  ">#{allowpic},</if>
+            <if test="remark != null  and remark !=''  ">#{remark},</if>
+        </trim>
+    </insert>
+    <delete id="deletePhone" parameterType="String">
+        delete from sys_phonemanage where pid in
+        <foreach item="pid" collection="array" open="(" separator="," close=")">
+            #{pid}
+        </foreach>
+    </delete>
+    <select id="selectPhoneById" parameterType="Long" resultMap="SysPhoneResult">
+        select pid,phone,uid,uname,rolecode,allowid,allowname,allowdate,reallowid,reallowname,allowpic,remark
+        from sys_phonemanage where pid=#{pid}
+    </select>
+    <update id="updatePhone" parameterType="com.sixin.system.domain.SysPhone">
+        update sys_phonemanage
+        <set>
+<!--            <if test="phone != null  ">phone=#{phone},</if>-->
+<!--            <if test="uid!= null  and uid!= ''  ">uid=#{uid},</if>-->
+<!--            <if test="uname != null  and uname != ''  ">uname=#{uname},</if>-->
+<!--            <if test="rolecode != null  and rolecode != ''  ">rolecode=#{rolecode},</if>-->
+<!--            <if test="allowid != null  and allowid != ''  ">allowid=#{allowid},</if>-->
+<!--            <if test="allowname != null  and allowname != ''  ">allowname=#{allowname},</if>-->
+<!--            <if test="reallowid != null  and reallowid != ''  ">reallowid#{reallowid},</if>-->
+<!--            <if test="reallowname != null  and reallowname !=''  ">reallowname#{reallowname},</if>-->
+<!--            <if test="allowpic != null  and allowpic!= ''  ">allowpic#{allowpic},</if>-->
+<!--            <if test="remark != null  and remark !=''  ">remark=#{remark},</if>-->
+            phone=#{phone},uid=#{uid},uname=#{uname},rolecode=#{rolecode},allowid=#{allowid},
+            allowname=#{allowname},reallowname=#{reallowname},allowpic=#{allowpic}
+        </set>
+        where pid=#{pid}
+    </update>
+</mapper>

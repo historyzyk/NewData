@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SecWarnMapper">
+    <resultMap type="com.sixin.iot.domain.Secenvwarn" id="SecurityEnvResult">
+        <result property="rain" column="rain" />
+        <result property="time" column="time"/>
+        <result property="pm" column="pm"/>
+        <result property="content" column="content"/>
+        <result property="mid" column="mid"/>
+        <result property="aid" column="aid"/>
+        <result property="aname" column="aname"/>
+    </resultMap>
+
+    <resultMap type="com.sixin.iot.domain.Secwatwarn" id="SecurityWatResult">
+        <result property="time" column="time"/>
+        <result property="ndata" column="ndata"/>
+        <result property="pdata" column="pdata"/>
+        <result property="qdata" column="qdata"/>
+        <result property="sdata" column="sdata"/>
+        <result property="fudata" column="fudata"/>
+        <result property="bacdata" column="bacdata"/>
+        <result property="aid" column="aid"/>
+        <result property="aname" column="aname"/>
+    </resultMap>
+
+    <select id="selectRainSecList" resultMap="SecurityEnvResult">
+        select
+          rain,
+          time,
+          a.aid as aid
+        from
+          env_data a,
+          area b
+        where a.aid=b.aid and rain>0
+        order by time ASC
+    </select>
+
+    <select id="selectPmSecList" resultMap="SecurityEnvResult">
+        select
+          pm,
+          time,
+          a.aid as aid
+        from
+          env_data a,
+          area b
+        where a.aid=b.aid and pm>0
+        order by time ASC
+    </select>
+
+    <select id="selectTempSecList" resultMap="SecurityEnvResult">
+        select
+          temp,
+          time
+        from
+          env_data
+        order by time ASC
+    </select>
+
+    <select id="selectWlvlSecList" resultMap="SecurityEnvResult">
+        select
+          wlevel,
+          time
+        from
+          env_data
+        order by time ASC
+    </select>
+
+    <select id="selectHumSecList" resultMap="SecurityEnvResult">
+        select
+          hum,
+          time,
+          a.aid as aid
+        from
+          env_data a,
+          area b
+        where a.aid=b.aid
+        order by time ASC
+    </select>
+
+    <select id="selectEnvTypeSecList" resultMap="SecurityEnvResult">
+        select
+          content,
+          secnum
+        from
+          secwarning
+        where mid in (select mid from secwarning where belong='环境数据')
+    </select>
+
+    <select id="selectWatTypeSecList" resultMap="SecurityEnvResult">
+        select
+          content,
+          secnum
+        from
+          secwarning
+        where mid in (select mid from secwarning where belong='水质数据')
+    </select>
+
+    <select id="water" resultMap="SecurityWatResult">
+        select sampling_time as stime,
+        N_data as ndata,
+        P_data as pdata,
+        Q_data as qdata,
+        S_data as sdata,
+        Fu_data as fudata
+        from water_data
+        order by stime ASC
+    </select>
+
+    <select id="bacsec" resultMap="SecurityWatResult">
+        select  Bac_data as bacdata,
+        sampling_time as stime
+        from water_data
+        order by stime ASC
+    </select>
+</mapper>

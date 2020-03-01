@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.PumpMapper">
+    <resultMap type="com.sixin.iot.domain.Pump" id="PumpResult">
+        <result property="id"    column="id"    />
+        <result property="tid"    column="tid"    />
+        <result property="pcurrent"    column="pcurrent"    />
+        <result property="pvoltage"    column="pvoltage"    />
+        <result property="wlheight"    column="wlheight"    />
+        <result property="wlpressure" column="wlpressure" />
+    </resultMap>
+    <!--定义selectPump为查询整表命令-->
+    <sql id="selectPump">
+    select id,tid,pcurrent,pvoltage,wlheight,wlpressure from iot_pump
+    </sql>
+    <!--查询表的所有列表信息-->
+    <select id="selectPumpList" parameterType="com.sixin.iot.domain.Pump" resultMap="PumpResult">
+        <include refid="selectPump"/>
+        <where>
+            <if test="id !=null and id !='' ">
+                AND id like concat('%', #{id},'%')
+            </if>
+            <if test="tid !=null and tid !='' ">
+                AND tid like concat('%', #{tid},'%')
+            </if>
+            <if test="pcurrent !=null and pcurrent !='' ">
+                AND pcurrent like concat('%', #{pcurrent},'%')
+            </if>
+            <if test="pvoltage !=null and pvoltage !='' ">
+                AND pvoltage like concat('%', #{pvoltage},'%')
+            </if>
+            <if test="wlheight !=null and wlheight !='' ">
+                AND wlheight like concat('%', #{wlheight},'%')
+            </if>
+            <if test="wlpressure !=null and wlpressure !='' ">
+                AND wlpressure like concat('%', #{wlpressure},'%')
+            </if>
+        </where>
+    </select>
+    <!--<where>
+        <if test="id != null and id='' "> and id = #{id}</if>
+        <if test="location != null  and location != '' "> and location = #{location}</if>
+        <if test="PCurrent != null  and PCurrent != '' "> and PCurrent = #{PCurrent}</if>
+        <if test="PVoltage != null  and PVoltage != '' "> and PVoltage = #{PVoltage}</if>
+    </where>
+    order by id desc
+    -->
+
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="PumpResult">
+        select id,tid,pcurrent,pvoltage,wlheight,wlpressure from iot_pump
+        where id=#{id}
+    </select>
+
+
+    <select id="selectPumpListByids" parameterType="java.util.List" resultMap="PumpResult">
+        <include refid="selectPump"/>
+        where id in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+        <!-- select
+         a.id as id,
+         a.location as location,
+         a.PCurrent as PCurrent,
+         a.PVoltage as PVoltage,
+         a.econdu as econdu
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="id != null  and id != '' ">and a.id like CONCAT(#{id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+
+    <!--向表中插入新数据-->
+    <insert id="insertPump" parameterType="com.sixin.iot.domain.Pump">
+        insert into iot_pump
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null and id!='' ">id,</if>
+            <if test="tid != null  and tid != ''  ">tid,</if>
+            <if test="pcurrent != null  and pcurrent != ''  ">pcurrent,</if>
+            <if test="pvoltage != null  and pvoltage != ''  ">pvoltage,</if>
+            <if test="wlheight != null  and wlheight != ''  ">wlheight,</if>
+            <if test="wlpressure != null  and wlpressure != ''  ">wlpressure,</if>
+        </trim>
+        values<trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="id != null and id!='' ">#{id},</if>
+        <if test="tid != null  and tid != ''  ">#{tid},</if>
+        <if test="pcurrent != null  and pcurrent != ''  ">#{pcurrent},</if>
+        <if test="pvoltage != null  and pvoltage != ''  ">#{pvoltage},</if>
+        <if test="wlheight != null  and wlheight != ''  ">#{wlheight},</if>
+        <if test="wlpressure != null  and wlpressure != ''  ">#{wlpressure},</if>
+    </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updatePump" parameterType="com.sixin.iot.domain.Pump">
+        update iot_pump
+        <set>
+            <if test="id !=null and id !='' ">id = #{id},</if>
+            <if test="tid != null  and tid != ''  ">tid = #{tid},</if>
+            <if test="pcurrent != null  and pcurrent != ''  ">pcurrent = #{pcurrent},</if>
+            <if test="pvoltage != null  and pvoltage != ''  ">pvoltage = #{pvoltage},</if>
+            <if test="wlheight != null  and wlheight != ''  ">wlheight = #{wlheight},</if>
+            <if test="wlpressure != null  and wlpressure != ''  ">wlpressure = #{wlpressure},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+
+    <!--根据id删除-->
+    <delete id="deletePumpByid" parameterType="String">
+        delete from iot_pump where id = #{id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deletePumpByids" parameterType="String">
+        delete from iot_pump where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

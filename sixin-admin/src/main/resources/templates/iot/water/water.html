@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="gray-bg">
+<div class="ui-layout-west">
+    <div class="main-content">
+        <div class="box box-main" style="width: 3000px">
+            <div class="box-header">
+                <div class="box-title">
+                    <i class="fa icon-grid"></i> 终端列表
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;">
+                        <i class="fa fa-chevron-up"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠">
+                        <i class="fa fa-chevron-down"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新">
+                        <i class="fa fa-refresh"></i></button>
+                </div>
+            </div>
+            <div class="ui-layout-content">
+                <div id="tree" class="ztree" style="overflow: auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-div ui-layout-center">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            编号：<input type="text" name="wid"/>
+                        </li>
+                        <li>
+                            类型：<input type="text" name="type"/>
+                        </li>
+                        <li>
+                            地域：<input type="text" name="area"/>
+                        </li>
+                        <li>
+                            温度：<input type="text" name="temperature"/>
+                        </li>
+                        <li>
+                            色度：<input type="text" name="color"/>
+                        </li>
+                        <li>
+                            浊度：<input type="text" name="turbidity"/>
+                        </li>
+                        <li>
+                            酸碱度：<input type="text" name="ph"/>
+                        </li>
+                        <li>
+                            电导率：<input type="text" name="electric"/>
+                        </li>
+                        <li>
+                            悬浮物：<input type="text" name="seston"/>
+                        </li>
+                        <li>
+                            溶解氧：<input type="text" name="oxygen"/>
+                        </li>
+                        <li>
+                            有毒物质：<input type="text" name="poison"/>
+                        </li>
+                        <li>
+                            创建者：<input type="text" name="creator"/>
+                        </li>
+
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="iot:waterinfo:add">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+            <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="iot:waterinfo:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="iot:waterinfo:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.operate.exportExcelBySingle()" shiro:hasPermission="iot:waterinfo:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('iot:waterinfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('iot:waterinfo:remove')}]];
+    var prefix = ctx + "iot/water";
+    $(function() {
+        $('body').layout({ west__size: 185 });
+        queryAreaList();
+        queryAreaTree();
+    });
+    function queryAreaList() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportBySingleUrl: prefix + "/exportbysingle",
+            sortName: "wid",
+            modalName: "水质检测",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'wid',
+                    title: '编号'
+                },
+                {
+                    field: 'type',
+                    title: '类型',
+                    sortable: true
+                },
+                {
+                    field: 'area',
+                    title: '地域',
+                    sortable: true
+                },
+                {
+                    field: 'temperature',
+                    title: '温度℃',
+                    sortable: true
+                },
+                {
+                    field: 'color',
+                    title: '色度%',
+                    sortable: true
+                },
+                {
+                    field: 'turbidity',
+                    title: '浊度%',
+                    sortable: true
+                },
+                {
+                    field: 'ph',
+                    title: '酸碱度',
+                    sortable: true
+                },
+                {
+                    field: 'electric',
+                    title: '电导率(西门子/米)',
+                    sortable: true
+                },
+                {
+                    field: 'seston',
+                    title: '悬浮物',
+                    sortable: true
+                },
+                {
+                    field: 'oxygen',
+                    title: '溶解氧',
+                    sortable: true
+                },
+                {
+                    field: 'poison',
+                    title: '有毒物质',
+                    sortable: true
+                },
+                {
+                    field: 'creator',
+                    title: '创建者',
+                    sortable: true
+                },
+                {
+                    field: 'creatime',
+                    title: '创建时间',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.wid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.wid + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+    function queryAreaTree(){
+        var url = ctx + "system/dept/treeData";
+        var options = {
+            url: url,
+            onClick : zOnClick
+        };
+        $.tree.init(options);
+
+        function zOnClick(event, treeId, treeNode) {
+            aid1 = treeNode.id;
+            $("#aid").val(treeNode.id);
+            $.table.search();
+        }
+        $.tree.init(options);
+    }
+    $('#form-group11').on('change', function (e) {
+        $("#form-group1").attr("name",$("#form-group11").val())
+    });
+    $('#form-group22').on('change', function (e) {
+        $("#form-group2").attr("name",$("#form-group22").val())
+    });
+    $('#form-group33').on('select2:select', function (e) {
+        $("#form-group3").attr("name",$("#form-group33").val())
+    });
+    $('#form-group44').on('change', function (e) {
+        $("#form-group4").attr("value",$("#form-group44").val());
+    });
+</script>
+
+</body>
+</html>

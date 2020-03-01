@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-energy-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">编号：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="eid" id="eid" placeholder="请输入编号">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">电池1电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="bvoltage" id="bvoltage" placeholder="请输入电池电压"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">电池组电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="bpvoltage" id="bpvoltage" placeholder="请输入电池组电压">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">充电电流：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="ccurrent" id="ccurrent" placeholder="请输入充电电流">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">负载电流：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="lcurrent" id="lcurrent" placeholder="请输入负载电流">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">输出电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="ovoltage" id="ovoltage" placeholder="请输入输出电压">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">外部电源电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="epsvoltage" id="epsvoltage"placeholder="请输入实时外部电源电压">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">太阳能电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="svoltage" id="svoltage"placeholder="请输入太阳能电压">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">工作温度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="workingtemperature" id="workingtemperature" placeholder="请输入当前工作温度">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">充电状态：</label>
+            <div class="col-sm-8">
+                <select class="chosen-select form-control" id="cstate" name="cstate"  type="text">
+                    <option value="1">涓流充电状态</option>
+                    <option value="2">浮充状态</option>
+                    <option value="3">大电流充电状态</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">工作状态：</label>
+            <div class="col-sm-8">
+                <select class="form-control" type="text" name="workingstatu" id="workingstatu">
+                    <option value="0">开关电源充电</option>
+                    <option value="1">太阳能充电</option>
+                    <option value="2">正常放电</option>
+                </select>
+            </div>
+        </div>
+
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/energy";
+
+    $("#form-energy-add").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-energy-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

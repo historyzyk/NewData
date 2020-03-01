@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.IotMessageMapper">
+
+    <resultMap type="com.sixin.iot.domain.IotMessage" id="IotMessageResult">
+        <result property="aid" column="dept_id"/>
+        <result property="parentaid" column="parent_id"/>
+        <result property="aname" column="dept_name"/>
+        <result property="note" column="email"/>
+        <result property="phone" column="leader"/>
+    </resultMap>
+
+    <select id="selectiotMessageList" parameterType="com.sixin.iot.domain.IotMessage" resultMap="IotMessageResult">
+        select
+        dept_name,
+        dept_id,
+        parent_id,
+        email
+--         null as phone
+        from
+        ry.sys_dept
+        <where>
+            <if test="aid != null  and aid != '' ">and dept_id like concat(#{aid},'%') </if>
+            <if test="parentaid != null  and parentaid != '' ">and parent_id like concat(#{aid},'%') </if>
+        </where>
+<!--        union-->
+<!--        select-->
+<!--        userid as aname,-->
+<!--        b.tid as aid,-->
+<!--        b.aid as parentaid,-->
+<!--        a.note-->
+<!--&#45;&#45;         null as phone-->
+<!--        from-->
+<!--        -->
+<!--&#45;&#45;         (area a join db_user_ter b on a.aid=b.aid)-->
+<!--        <where>-->
+<!--            <if test="aid != null  and aid != '' ">and a.aid like concat(#{aid},'%') </if>-->
+<!--            <if test="parentaid != null  and parentaid != '' ">and b.aid like concat(#{parentaid},'%')</if>-->
+<!--            <if test="aname != null  and aname != '' ">and userid like concat(#{aname},'%')</if>-->
+<!--            <if test="note != null  and note != '' ">and note like concat(#{note},'%')</if>-->
+<!--&lt;!&ndash;            <if test="phone != null  and phone != '' ">and phone like concat(#{phone},'%')</if>&ndash;&gt;-->
+<!--        </where>-->
+    </select>
+</mapper>

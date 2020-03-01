@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RuoYi - 404</title>
+    <link href="/css/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/css/animate.css" rel="stylesheet"/>
+    <link href="/css/style.css" rel="stylesheet"/>
+</head>
+<body class="gray-bg">
+<div class="middle-box text-center animated fadeInDown">
+<h3 align="center"> 添加设备信息</h3>
+    <form action="/iot/device/adddevice" method="get">
+        编号:<input type="text" name="did"/></br>
+        地域名:<input type="text" name="dname"/></br>
+        工作状态:<input type="radio" value=1 name="dstatus"/>正常<input type="radio" value=0 name="dstatus"/>停用</br>
+        电压：<input type="text" name="dv"/></br>
+        创建日期：<input id="dctime1" type="date" value="2019-11-01" name="dctime1"/></br>
+        维护日期：<input id="dftime1" type="date" value="2019-11-01" name="dftime1"/></br>
+        创建人员：<input type="text" name="dcname"/></br>
+        维护人员：<input type="text" name="dfname"/></br>
+        备注：<input type="text" name="note"/></br>
+        <input type="submit" value="添加">
+    </form>
+    <a class="back_btn" href="javascript:window.history.go(-1)">< 返回土壤数据主页</a>
+</div>
+<script src="/js/jquery.min.js?v=2.1.4"></script>
+<script src="/js/bootstrap.min.js?v=3.3.6"></script>
+</body>
+</html>

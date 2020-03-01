@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SandboxMapper">
+    <resultMap type="com.sixin.iot.domain.Sandbox" id="SandboxResult">
+        <id property="switch_id"    column="switch_id"    />
+        <result property="control"    column="control"    />
+    </resultMap>
+    <!--定义selectSandbox为查询整表命令-->
+    <sql id="selectSandbox">
+    select switch_id,control from iot_sandbox
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_led
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectSandboxList" parameterType="com.sixin.iot.domain.Sandbox" resultMap="SandboxResult">
+        <include refid="selectSandbox"/>
+        <where>
+            <if test="switch_id != null and switch_id !='' "> AND  switch_id like concat('%' ,#{switch_id},'%')</if>
+            <if test="control!= null  and control!= '' ">AND  control like concat('%' ,#{control},'%')</if>
+        </where>
+    </select>
+
+
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="SandboxResult">
+        <include refid="selectSandbox"/>
+        where switch_id=#{switch_id}
+        <!-- select
+         a.switch_id as switch_id,
+         a.control as control,
+         a.working as working,
+         a.screen_wide as screen_wide,
+         a.screen_high as screen_high,
+         a.screen_status as screen_status
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="switch_id != null  and switch_id != '' ">and a.switch_id like CONCAT(#{switch_id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertSandbox" parameterType="com.sixin.iot.domain.Sandbox">
+        insert into iot_sandbox
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="switch_id != null and switch_id!='' ">switch_id,</if>
+        <if test="control!= null  and control!= ''  ">control,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="switch_id != null and switch_id!='' ">#{switch_id},</if>
+        <if test="control != null  and control != ''  ">#{control},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateSandbox" parameterType="com.sixin.iot.domain.Sandbox">
+        update iot_sandbox
+        <set>
+            <if test="switch_id != null and switch_id !=''">switch_id = #{switch_id},</if>
+            <if test="control != null  and control != ''  ">control = #{control},</if>
+        </set>
+        where switch_id = #{switch_id}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteSandboxByid" parameterType="String">
+        delete from iot_sandbox where switch_id = #{switch_id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteSandboxByids" parameterType="String">
+        delete from iot_sandbox where switch_id in
+        <foreach item="switch_id" collection="array" open="(" separator="," close=")">
+            #{switch_id}
+        </foreach>
+    </delete>
+
+
+</mapper>

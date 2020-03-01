@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.LightMapper">
+    <resultMap type="com.sixin.iot.domain.Light" id="LightResult">
+        <id property="nid"    column="nid"    />
+        <result property="atemperature"    column="atemperature"    />
+        <result property="windspeed"    column="windspeed"    />
+        <result property="current"    column="current"  />
+        <result property="voltage"    column="voltage"    />
+        <result property="tstart"    column="tstart"    />
+        <result property="tdown"    column="tdown"    />
+    </resultMap>
+    <!--定义selectLight为查询整表命令-->
+    <sql id="selectLight">
+    select nid,atemperature,windspeed,current,voltage,tstart,tdown from iot_light
+    </sql>
+
+
+    <!--查询表的所有列表信息-->
+    <select id="selectLightList" parameterType="com.sixin.iot.domain.Light" resultMap="LightResult">
+        <include refid="selectLight"/>
+        <where>
+            <if test="nid !=null and nid !='' ">
+                AND nid like concat('%', #{nid},'%')
+            </if>
+            <if test="atemperature !=null and atemperature !='' ">
+                AND atemperature like concat('%', #{atemperature},'%')
+            </if>
+            <if test="windspeed !=null and windspeed !='' ">
+                AND windspeed like concat('%', #{windspeed},'%')
+            </if>
+            <if test="current !=null and current !='' ">
+                AND current like concat('%', #{current},'%')
+            </if>
+            <if test="voltage !=null and voltage !='' ">
+                AND voltage like concat('%', #{voltage},'%')
+            </if>
+        </where>
+    </select>
+    <!--<where>
+        <if test="nid != null and nid='' "> and nid = #{nid}</if>
+        <if test="location != null  and location != '' "> and location = #{location}</if>
+        <if test="windspeed != null  and windspeed != '' "> and windspeed = #{windspeed}</if>
+        <if test="current != null  and current != '' "> and current = #{current}</if>
+    </where>
+    order by nid desc
+    -->
+
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="LightResult">
+       select nid,atemperature,windspeed,current,voltage,tstart,tdown from iot_light
+        where nid=#{nid}
+    </select>
+
+    <select id="selectLightListByids" parameterType="java.util.List" resultMap="LightResult">
+        <include refid="selectLight"/>
+        where nid in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+    <!-- select
+     a.nid as nid,
+     a.location as location,
+     a.windspeed as windspeed,
+     a.current as current,
+     a.econdu as econdu
+     from iot_led a
+     -->
+    <!--
+    <where>
+        <if test="nid != null  and nid != '' ">and a.nid like CONCAT(#{nid},'%')</if>
+        <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+    </where>
+    -->
+
+    <!--向表中插入新数据-->
+    <insert id="insertLight" parameterType="com.sixin.iot.domain.Light">
+        insert into iot_light
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nid != null and nid!='' ">nid,</if>
+            <if test="atemperature != null  and atemperature != ''  ">atemperature,</if>
+            <if test="windspeed != null  and windspeed != ''  ">windspeed,</if>
+            <if test="current != null  and current != ''  ">current,</if>
+            <if test="voltage != null  and voltage != ''  ">voltage,</if>
+            <if test="tstart != null  and tstart != ''  ">tstart,</if>
+            <if test="tdown != null  and tdown != ''  ">tdown,</if>
+        </trim>
+        values<trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="nid != null and nid!='' ">#{nid},</if>
+        <if test="atemperature != null  and atemperature != ''  ">#{atemperature},</if>
+        <if test="windspeed != null  and windspeed != ''  ">#{windspeed},</if>
+        <if test="current != null  and current != ''  ">#{current},</if>
+        <if test="voltage != null  and voltage != ''  ">#{voltage},</if>
+        <if test="tstart != null  and tstart != ''  ">#{tstart},</if>
+        <if test="tdown != null  and tdown != ''  ">#{tdown},</if>
+    </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateLight" parameterType="com.sixin.iot.domain.Light">
+        update iot_light
+        <set>
+            <if test="nid !=null and nid !=''">nid = #{nid},</if>
+            <if test="atemperature != null  and atemperature != ''  ">atemperature = #{atemperature},</if>
+            <if test="windspeed != null  and windspeed != ''  ">windspeed = #{windspeed},</if>
+            <if test="current != null  and current != ''  ">current = #{current},</if>
+            <if test="voltage != null  and voltage != ''  ">voltage = #{voltage},</if>
+            <if test="tstart != null  and tstart != ''  ">tstart = #{tstart},</if>
+            <if test="tdown != null  and tdown != ''  ">tdown = #{tdown},</if>
+        </set>
+        where nid = #{nid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteLightByid" parameterType="String">
+        delete from iot_light where nid = #{nid}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteLightByids" parameterType="String">
+        delete from iot_light where nid in
+        <foreach item="nid" collection="array" open="(" separator="," close=")">
+            #{nid}
+        </foreach>
+    </delete>
+
+
+</mapper>

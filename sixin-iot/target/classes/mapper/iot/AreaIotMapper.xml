@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.AreaIotMapper">
+
+    <resultMap type="com.sixin.iot.domain.AreaIot" id="AreaIotResult">
+        <result property="aid"    column="dept_id"    />
+        <result property="parentaid"    column="parent_id"    />
+        <result property="aname"    column="dept_name"    />
+        <result property="note"    column="email"    />
+    </resultMap>
+
+    <sql id="selectAreaVo">
+        select dept_id as aid, parent_id as parentaid, dept_name as aname, email as note from ry.sys_dept where 1=1
+    </sql>
+
+    <select id="selectAreaList" parameterType="com.sixin.iot.domain.AreaIot" resultMap="AreaIotResult">
+        <include refid="selectAreaVo"/>
+        <where>
+            <if test="aid != null  and aid != '' "> and dept_id = #{aid}</if>
+            <if test="parentaid != null  and parentaid != '' "> and parent_id = #{parentaid}</if>
+            <if test="aname != null  and aname != '' "> and dept_name = #{aname}</if>
+            <if test="note != null  and note != '' "> and email = #{note}</if>
+        </where>
+    </select>
+
+    <select id="chooseAreaList" parameterType="com.sixin.iot.domain.AreaIot" resultMap="AreaIotResult">
+        <include refid="selectAreaVo"/>
+        <where>
+            <if test="aid != null  and aid != '' ">dept_id = #{aid} or parent_id = #{aid}</if>
+        </where>
+    </select>
+    <select id="selectAreaIotById" parameterType="String" resultMap="AreaIotResult">
+        <include refid="selectAreaVo"/>
+        where dept_id = #{aid}
+    </select>
+</mapper>

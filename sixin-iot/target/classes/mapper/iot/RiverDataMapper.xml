@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.RiverDataMapper">
+
+    <resultMap type="com.sixin.iot.domain.RiverData" id="RiverDataResult">
+        <id property="id"    column="id"    />
+        <result property="type"    column="type"    />
+        <result property="rid"    column="rid"    />
+        <result property="rname"    column="rname"    />
+        <result property="data"    column="data"    />
+        <result property="time" column="time"/>
+<!--        <association property="Areatel" javaType="com.sixin.iot.domain.Areatel">-->
+<!--            <id property="rid" column="rid" />-->
+<!--            <result property="rtel" column="rtel"/>-->
+<!--            <result property="rname" column="rname"/>-->
+<!--        </association>-->
+    </resultMap>
+
+    <select id="selectData" resultMap="RiverDataResult">
+                select a.id,a.type,a.rid,a.rname,avg(data)as data,time from rivrepo_data a join areatel b
+                on a.rid=b.rid group by a.rname having a.rname like concat('%','水库','%') order by time desc limit 100;
+    </select>
+</mapper>

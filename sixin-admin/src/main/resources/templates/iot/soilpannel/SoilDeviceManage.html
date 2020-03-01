@@ -1,0 +1,39 @@
+<!DOCTYPE html >
+<html lang="en" xmlns:th="http://java.sun.com/jsf/composite">
+<head>
+    <meta charset="UTF-8">
+    <title>土壤数据设备管理</title>
+</head>
+<body>
+<h2 align="center">查询结果</h2>
+<table align="center">
+    <thead>
+    <tr>
+        <th>序号</th>
+        <th>设备名</th>
+        <th>设备状态</th>
+        <th>电压</th>
+        <th>创建日期</th>
+        <th>维护日期</th>
+        <th>创建人员</th>
+        <th>维护人员</th>
+        <th>备注</th>
+    </tr>
+    </thead>
+    <tbody th:each="i:${device}">
+    <tr>
+        <td th:text="${i.did}"></td>
+        <td th:text="${i.dname}"></td>
+        <td th:text="${i.dstatus==0?'否':'是'}"></td>
+        <td th:text="${i.dv}"></td>
+        <td th:text=${#dates.format(i.dctime,'yyyy年MM月dd日')}></td>
+        <td th:text=${#dates.format(i.dftime,'yyyy年MM月dd日')}></td>
+        <td th:text="${i.dcname}"></td>
+        <td th:text="${i.dfname}"></td>
+        <td th:text="${i.note}"></td>
+    </tr>
+    </tbody>
+</table>
+<a class="back_btn" href="javascript:window.history.go(-1)">< 返回土壤数据主页</a>
+</body>
+</html>

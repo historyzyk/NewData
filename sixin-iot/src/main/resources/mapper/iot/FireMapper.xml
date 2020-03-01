@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.FireMapper">
+    <resultMap type="com.sixin.iot.domain.Fire" id="FireResult">
+        <result property="fid"    column="fid"    />
+        <result property="dstatus"    column="dstatus"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="ppm"    column="ppm"    />
+        <result property="pm"    column="pm"    />
+        <result property="eletric" column="eletric" />
+    </resultMap>
+    <!--定义selectFire为查询整表命令-->
+    <sql id="selectFire">
+    select fid,dstatus,temperature,ppm,pm,eletric from iot_fire
+    </sql>
+    <!--查询表的所有列表信息-->
+    <select id="selectFireList" parameterType="com.sixin.iot.domain.Fire" resultMap="FireResult">
+        <include refid="selectFire"/>
+        <where>
+            <if test="fid != null and fid != '' "> AND fid like concat('%', #{fid}, '%')</if>
+            <if test="dstatus != null  and dstatus != '' "> AND dstatus like concat('%', #{dstatus}, '%')</if>
+            <if test="temperature != null  and temperature != '' "> AND temperature like concat('%', #{temperature}, '%')</if>
+            <if test="ppm != null  and ppm != '' "> AND ppm like concat('%', #{ppm}, '%')</if>
+            <if test="pm != null  and pm != '' "> AND pm like concat('%', #{pm}, '%')</if>
+            <if test="eletric != null  and eletric != '' "> AND eletric like concat('%', #{eletric}, '%')</if>
+        </where>
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="FireResult">
+        <include refid="selectFire"/>
+        where fid=#{fid}
+        <!-- select
+         a.fid as fid,
+         a.location as location,
+         a.temperature as temperature,
+         a.ppm as ppm,
+         a.econdu as econdu
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="fid != null  and fid != '' ">and a.fid like CONCAT(#{fid},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertFire" parameterType="com.sixin.iot.domain.Fire">
+        insert into iot_fire
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="fid != null and fid!='' ">fid,</if>
+            <if test="dstatus != null  and dstatus != ''  ">dstatus,</if>
+            <if test="temperature != null  and temperature != ''  ">temperature,</if>
+            <if test="ppm != null  and ppm != ''  ">ppm,</if>
+            <if test="pm != null  and pm != ''  ">pm,</if>
+            <if test="eletric != null  and eletric != ''  ">eletric,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="fid != null and fid!='' ">#{fid},</if>
+            <if test="dstatus != null  and dstatus != ''  ">#{dstatus},</if>
+            <if test="temperature != null  and temperature != ''  ">#{temperature},</if>
+            <if test="ppm != null  and ppm != ''  ">#{ppm},</if>
+            <if test="pm != null  and pm != ''  ">#{pm},</if>
+            <if test="eletric != null  and eletric != ''  ">#{eletric},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateFire" parameterType="com.sixin.iot.domain.Fire">
+        update iot_fire
+        <set>
+            <if test="fid !=null and fid !=''">fid = #{fid},</if>
+            <if test="dstatus != null  and dstatus != ''  ">dstatus = #{dstatus},</if>
+            <if test="temperature != null  and temperature != ''  ">temperature = #{temperature},</if>
+            <if test="ppm != null  and ppm != ''  ">ppm = #{ppm},</if>
+            <if test="pm != null  and pm != ''  ">pm = #{pm},</if>
+            <if test="eletric != null  and eletric != ''  ">eletric = #{eletric},</if>
+        </set>
+        where fid = #{fid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteFireByid" parameterType="String">
+        delete from iot_fire where fid = #{fid}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteFireByids" parameterType="String">
+        delete from iot_fire where fid in
+        <foreach item="fid" collection="array" open="(" separator="," close=")">
+            #{fid}
+        </foreach>
+    </delete>
+    <select id="selectFireListByids" parameterType="java.util.List" resultMap="FireResult">
+       <include refid="selectFire"/>
+    where fid in
+    <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+        #{sfid}
+    </foreach>
+    </select>
+</mapper>

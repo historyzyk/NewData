@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.AreaIotGroupMapper">
+    <resultMap type="com.sixin.iot.domain.AreaIotGroup" id="AreaIotGroupResult">
+        <result property="aid"    column="dept_id"    />
+        <result property="parentaid"    column="parent_id"    />
+        <result property="aname"    column="dept_name"    />
+        <result property="note"    column="email"    />
+        <result property="parentaname"    column="parentaname"    />
+    </resultMap>
+
+
+    <select id="listAreaIotGroup"  parameterType="com.sixin.iot.domain.AreaIotGroup" resultMap="AreaIotGroupResult">
+        select
+        dept_id as aid,
+        parent_id as parentaid,
+        dept_name as aname,
+        email as note
+        from ry.sys_dept
+        <where>
+            <if test="aid != null  and aid != '' ">and dept_id like CONCAT(#{aid},'%')</if>
+            <if test="aname != null  and aname != '' ">and dept_name like CONCAT('%',#{aname},'%')</if>
+        </where>
+    </select>
+
+</mapper>

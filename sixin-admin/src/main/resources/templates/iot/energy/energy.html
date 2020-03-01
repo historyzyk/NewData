@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org"
+      xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/jquery-layout/jquery.layout-latest.css}" rel="stylesheet"/>
+<link th:href="@{/ajax/libs/jquery-ztree/3.5/css/metro/zTreeStyle.css}" rel="stylesheet"/>
+<body class="gray-bg">
+<div class="ui-layout-west">
+    <div class="main-content">
+        <div class="box box-main" style="width: 3000px">
+            <div class="box-header">
+                <div class="box-title">
+                    <i class="fa icon-grid"></i> 终端列表
+                </div>
+                <div class="box-tools pull-right">
+                    <button type="button" class="btn btn-box-tool" id="btnExpand" title="展开" style="display:none;">
+                        <i class="fa fa-chevron-up"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnCollapse" title="折叠">
+                        <i class="fa fa-chevron-down"></i></button>
+                    <button type="button" class="btn btn-box-tool" id="btnRefresh" title="刷新">
+                        <i class="fa fa-refresh"></i></button>
+                </div>
+            </div>
+            <div class="ui-layout-content">
+                <div id="tree" class="ztree" style="overflow: auto"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container-div ui-layout-center">
+    <div class="row">
+        <div class="col-sm-12 search-collapse">
+            <form id="formId">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            编号：<input type="text" name="eid"/>
+                        </li>
+                        <li>
+                            电池电压：<input type="text" name="bvoltage"/>
+                        </li>
+                        <li>
+                            电池组电压：<input type="text" name="bpvoltage"/>
+                        </li>
+                        <li>
+                            充电电流：<input type="text" name="ccurrent"/>
+                        </li>
+                        <li>
+                            负载电流：<input type="text" name="lcurrent"/>
+                        </li>
+                        <li>
+                            输出电压：<input type="text" name="ovoltage"/>
+                        </li>
+                        <li>
+                            外部电源电压：<input type="text" name="epsvoltage"/>
+                        </li>
+                        <li>
+                            太阳能电压：<input type="text" name="svoltage"/>
+                        </li>
+                        <li>
+                            工作温度：<input type="text" name="workingtemperature"/>
+                        </li>
+                        <li>
+                            充电状态：<input list="cstate"  name="cstate"/>
+                            <datalist id="cstate">
+                                <option value="1">涓流充电状态</option>
+                                <option value="2">浮充状态</option>
+                                <option value="3">大电流充电状态</option>
+                            </datalist>
+                        </li>
+                        <li>
+                            工作状态：<input list="workingstatu"  name="workingstatu"/>
+                            <datalist id="workingstatu">
+                                <option value="1">涓流充电状态</option>
+                                <option value="2">浮充状态</option>
+                                <option value="3">大电流充电状态</option>
+                                <option value="未知">未知</option>
+                            </datalist>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                            <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+        <div class="btn-group-sm hidden-xs" id="toolbar" role="group">
+            <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="iot:energyinfo:add">
+                <i class="fa fa-plus"></i> 新增
+            </a>
+            <a class="btn btn-primary btn-edit disabled" onclick="$.operate.edit()" shiro:hasPermission="iot:energyinfo:edit">
+                <i class="fa fa-edit"></i> 修改
+            </a>
+            <a class="btn btn-danger btn-del disabled" onclick="$.operate.removeAll()" shiro:hasPermission="iot:energyinfo:remove">
+                <i class="fa fa-remove"></i> 删除
+            </a>
+            <a class="btn btn-warning" onclick="$.operate.exportExcelBySingle()" shiro:hasPermission="iot:energyinfo:export">
+                <i class="fa fa-download"></i> 导出
+            </a>
+        </div>
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/ajax/libs/jquery-layout/jquery.layout-latest.js}"></script>
+<script th:src="@{/ajax/libs/jquery-ztree/3.5/js/jquery.ztree.all-3.5.js}"></script>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('iot:energyinfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('iot:energyinfo:remove')}]];
+    var prefix = ctx + "iot/energy";
+    var aid1 = "";
+    $(function() {
+        $('body').layout({ west__size: 185 });
+        queryAreaList();
+        queryAreaTree();
+    });
+    function queryAreaList() {
+        var options = {
+            url: prefix + "/list",
+            createUrl: prefix + "/add",
+            updateUrl: prefix + "/edit/{id}",
+            removeUrl: prefix + "/remove",
+            exportBySingleUrl: prefix + "/exportbysingle",
+            sortName: "eid",
+            modalName: "能源管理终端",
+            search: false,
+            showExport: true,
+            columns: [{
+                checkbox: true
+            },
+                {
+                    field: 'eid',
+                    title: '编号'
+                },
+                {
+                    field: 'bvoltage',
+                    title: '电池1电压',
+                    sortable: true
+                },
+                {
+                    field: 'bpvoltage',
+                    title: '电池组电压',
+                    sortable: true
+                },
+                {
+                    field: 'ccurrent',
+                    title: '充电电流',
+                    sortable: true
+                },
+                {
+                    field: 'lcurrent',
+                    title: '负载电流',
+                    sortable: true
+                },
+                {
+                    field: 'ovoltage',
+                    title: '输出电压',
+                    sortable: true
+                },
+                {
+                    field: 'epsvoltage',
+                    title: '外部电源电压',
+                    sortable: true
+                },
+                {
+                    field: 'svoltage',
+                    title: '太阳能电压',
+                    sortable: true
+                },
+                {
+                    field: 'workingtemperature',
+                    title: '工作温度',
+                    sortable: true
+                },
+                {
+                    field: 'cstate',
+                    title: '充电状态',
+                    sortable: true
+                },
+                {
+                    field: 'workingstatu',
+                    title: '工作状态',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.eid + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="#" onclick="$.operate.remove(\'' + row.eid + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    };
+    function queryAreaTree(){
+        var url = ctx + "system/dept/treeData";
+        var options = {
+            url: url,
+            onClick : zOnClick
+        };
+        $.tree.init(options);
+
+        function zOnClick(event, treeId, treeNode) {
+            aid1 = treeNode.id;
+            $("#aid").val(treeNode.id);
+            $.table.search();
+        }
+        $.tree.init(options);
+    }
+    $('#form-group11').on('change', function (e) {
+        $("#form-group1").attr("name",$("#form-group11").val())
+    });
+    $('#form-group22').on('change', function (e) {
+        $("#form-group2").attr("name",$("#form-group22").val())
+    });
+    $('#form-group33').on('select2:select', function (e) {
+        $("#form-group3").attr("name",$("#form-group33").val())
+    });
+    $('#form-group44').on('change', function (e) {
+        $("#form-group4").attr("value",$("#form-group44").val());
+    });
+</script>
+</body>
+</html>

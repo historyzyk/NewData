@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.EnergyMapper">
+    <resultMap type="com.sixin.iot.domain.Energy" id="EnergyResult">
+        <result property="eid"    column="eid"    />
+        <result property="bvoltage"    column="bvoltage"    />
+        <result property="bpvoltage"    column="bpvoltage"    />
+        <result property="ccurrent"    column="ccurrent"    />
+        <result property="lcurrent"    column="lcurrent"    />
+        <result property="ovoltage"    column="ovoltage"    />
+        <result property="epsvoltage"  column="epsvoltage"  />
+        <result property="svoltage" column="svoltage" />
+        <result property="workingtemperature" column="workingtemperature" />
+        <result property="cstate" column="cstate" />
+        <result property="workingstatu" column="workingstatu" />
+    </resultMap>
+    <!--定义selectEnergy为查询整表命令-->
+    <sql id="selectEnergy">
+    select eid,bvoltage,bpvoltage,ccurrent,lcurrent,ovoltage,epsvoltage,svoltage,workingtemperature,cstate,workingstatu from iot_energy
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_energy
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectEnergyList" parameterType="com.sixin.iot.domain.Energy" resultMap="EnergyResult">
+        <include refid="selectEnergy"/>
+        <where>
+            <if test="eid != null and eid !='' ">
+                AND eid like concat('%', #{eid},'%')
+            </if>
+            <if test="bvoltage !=null and bvoltage !='' ">
+                AND bvoltage like concat('%', #{bvoltage},'%')
+            </if>
+            <if test="bpvoltage !=null and bpvoltage !='' ">
+                AND bpvoltage like concat('%', #{bpvoltage},'%')
+            </if>
+            <if test="ccurrent !=null and ccurrent !='' ">
+                AND ccurrent like concat('%', #{ccurrent},'%')
+            </if>
+            <if test="lcurrent !=null and lcurrent !='' ">
+                AND lcurrent like concat('%', #{lcurrent},'%')
+            </if>
+            <if test="ovoltage !=null and ovoltage !='' ">
+                AND ovoltage like concat('%', #{ovoltage},'%')
+            </if>
+            <if test="epsvoltage !=null and epsvoltage !='' ">
+                AND epsvoltage like concat('%', #{epsvoltage},'%')
+            </if>
+            <if test="svoltage !=null and svoltage !='' ">
+                AND svoltage like concat('%', #{svoltage},'%')
+            </if>
+            <if test="workingtemperature !=null and workingtemperature !='' ">
+                AND workingtemperature like concat('%', #{workingtemperature},'%')
+            </if>
+            <if test="cstate !=null and cstate !='' ">
+                AND cstate like concat('%', #{cstate},'%')
+            </if>
+            <if test="workingstatu !=null and workingstatu !='' ">
+                AND workingstatu like concat('%', #{workingstatu},'%')
+            </if>
+
+        </where>
+    </select>
+    <!--<where>
+        <if test="eid != null and eid='' "> and eid = #{eid}</if>
+        <if test="bvoltage!= null  and bvoltage!= '' "> and bvoltage= #{bvoltage}</if>
+        <if test="bpvoltage != null  and bpvoltage != '' "> and bpvoltage = #{bpvoltage}</if>
+        <if test="ccurrent != null  and ccurrent != '' "> and ccurrent = #{ccurrent}</if>
+        <if test="lcurrent != null  and lcurrent != '' "> and lcurrent = #{lcurrent}</if>
+        <if test="ovoltage != null  and ovoltage != '' "> and ovoltage = #{ovoltage}</if>
+        <if test="epsvoltage != null  and epsvoltage != '' "> and epsvoltage = #{epsvoltage}</if>
+        <if test="svoltage !=null and svoltage !='' ">and svoltage = #{svoltage}</if>
+        <if test="workingtemperature !=null and workingtemperature !='' ">and workingtemperature = #{workingtemperature}</if>
+        <if test="cstate !=null and cstate !='' ">and cstate = #{cstate}</if>
+        <if test="workingstatu !=null and workingstatu !='' ">and workingstatu =#{workingstatu}</if>
+    </where>
+    order by eid desc
+    -->
+
+
+    <!--根据id查询信息-->
+
+    <select id="selectByid" parameterType="String" resultMap="EnergyResult">
+        select eid,bvoltage,bpvoltage,ccurrent,lcurrent,ovoltage,epsvoltage,svoltage,workingtemperature,cstate,workingstatu from iot_energy
+        <where>
+            eid =#{eid}
+        </where>
+    </select>
+
+    <select id="selectEnergyListByids" parameterType="java.util.List" resultMap="EnergyResult">
+        <include refid="selectEnergy"/>
+        where nid in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+
+    <!--<select id="selectBybvo" parameterType="String" resultMap="EnergyResult">
+        <include refid="selectEnergy"/>
+        <where>
+            bvoltage=#{bvoltage}
+        </where>
+    </select>
+    -->
+    <!-- select
+     a.eid as eid,
+     a.bvoltage as bvoltage,
+     a.bpvoltage as bpvoltage,
+     a.ccurrent as ccurrent,
+     a.lcurrent as lcurrent,
+     a.ovoltage as ovoltage
+     from iot_led a
+     -->
+    <!--
+    <where>
+        <if test="eid != null  and eid != '' ">and a.eid like CONCAT(#{eid},'%')</if>
+        <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+    </where>
+    -->
+
+    <!--向表中插入新数据-->
+    <insert id="insertEnergy" parameterType="com.sixin.iot.domain.Energy">
+        insert into iot_energy
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="eid != null and eid !='' ">eid,</if>
+            <if test="bvoltage!= null  and bvoltage!= ''  ">bvoltage,</if>
+            <if test="bpvoltage != null  and bpvoltage != ''  ">bpvoltage,</if>
+            <if test="ccurrent != null  and ccurrent != ''  ">ccurrent,</if>
+            <if test="lcurrent != null  and lcurrent != ''  ">lcurrent,</if>
+            <if test="ovoltage != null  and ovoltage != ''  ">ovoltage,</if>
+            <if test="epsvoltage != null and epsvoltage !='' ">epsvoltage,</if>
+            <if test="svoltage != null and svoltage != '' ">svoltage,</if>
+            <if test="workingtemperature != null and workingtemperature !='' ">workingtemperature,</if>
+            <if test="cstate !=null and cstate !=''">cstate,</if>
+            <if test="workingstatu !=null and workingstatu !='' ">workingstatu,</if>
+        </trim>
+        values<trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="eid != null and eid !='' ">#{eid},</if>
+        <if test="bvoltage != null  and bvoltage != ''  ">#{bvoltage},</if>
+        <if test="bpvoltage != null  and bpvoltage != ''  ">#{bpvoltage},</if>
+        <if test="ccurrent != null  and ccurrent != ''  ">#{ccurrent},</if>
+        <if test="lcurrent != null  and lcurrent != ''  ">#{lcurrent},</if>
+        <if test="ovoltage != null  and ovoltage != ''  ">#{ovoltage},</if>
+        <if test="epsvoltage !=null and epsvoltage !='' ">#{epsvoltage},</if>
+        <if test="svoltage !=null and svoltage !='' ">#{svoltage},</if>
+        <if test="workingtemperature !=null and workingtemperature !=''">#{workingtemperature},</if>
+        <if test="cstate !=null and cstate !=''">#{cstate},</if>
+        <if test="workingstatu !=null and workingstatu !=''">#{workingstatu},</if>
+    </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateEnergy" parameterType="com.sixin.iot.domain.Energy">
+        update iot_energy
+        <set>
+            <if test="bvoltage != null  and bvoltage != ''  ">bvoltage = #{bvoltage},</if>
+            <if test="bpvoltage != null  and bpvoltage != ''  ">bpvoltage = #{bpvoltage},</if>
+            <if test="ccurrent != null  and ccurrent != ''  ">ccurrent = #{ccurrent},</if>
+            <if test="lcurrent != null  and lcurrent != ''  ">lcurrent = #{lcurrent},</if>
+            <if test="ovoltage != null  and ovoltage != ''  ">ovoltage = #{ovoltage},</if>
+            <if test="epsvoltage != null  and epsvoltage != ''  ">epsvoltage = #{epsvoltage},</if>
+            <if test="svoltage != null  and svoltage != ''  ">svoltage = #{svoltage},</if>
+            <if test="workingtemperature != null  and workingtemperature != ''  ">workingtemperature = #{workingtemperature},</if>
+            <if test="cstate != null  and cstate != ''  ">cstate = #{cstate},</if>
+            <if test="workingstatu != null  and workingstatu != ''  ">workingstatu = #{workingstatu}，</if>
+        </set>
+        where eid =#{eid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteEnergyByid" parameterType="String">
+        delete from iot_energy where eid = #{eid}
+    </delete>
+
+    <!--批量删除  -->
+    <delete id="deleteEnergyByids" parameterType="String">
+        delete from iot_energy where eid in
+        <foreach item="eid" collection="array" open="(" separator="," close=")">
+            #{eid}
+        </foreach>
+    </delete>
+
+
+</mapper>

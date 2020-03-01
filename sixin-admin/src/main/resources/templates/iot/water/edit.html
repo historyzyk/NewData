@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-water-edit" th:object="${water}">
+        <input id="wid" name="wid" type="hidden" th:field="*{wid}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">类型：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="type" id="type" th:field="*{type}"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">地域：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="area" id="area" th:field="*{area}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">温度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="temperature" id="temperature" th:field="*{temperature}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">色度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="color" id="color" th:field="*{color}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">浊度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="turbidity" id="turbidity" th:field="*{turbidity}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">酸碱度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="ph" id="ph" th:field="*{ph}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">电导率：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="electric" id="electric" th:field="*{electric}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">悬浮物：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="seston" id="seston" th:field="*{seston}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">溶解氧：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="oxygen" id="oxygen" th:field="*{oxygen}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">有毒物质：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="poison" id="poison" th:field="*{poison}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">创建者：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="creator" id="creator" th:field="*{creator}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">创建时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="time" name="creatime" id="creatime" th:field="*{creatime}">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/water";
+
+    $("#form-water-edit").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-water-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

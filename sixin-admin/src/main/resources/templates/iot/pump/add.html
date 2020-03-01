@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-pump-add">
+        <div class="form-group">
+            <label class="col-sm-3 control-label">序号：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="id" id="id" placeholder="请输入水泵序列号"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label ">型号：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="tid" id="tid"placeholder="请输入水泵型号"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">水泵电流：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="pcurrent" id="pcurrent" placeholder="请输入水泵电流">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">水泵电压：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="pvoltage" id="pvoltage" placeholder="请输入水泵电压">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">水位高度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="wlheight" id="wlheight" placeholder="请输入水位高度">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">水位压力：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="wlpressure" id="wlpressure" placeholder="请输入水位压力">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/pump";
+
+    $("#form-pump-add").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/add", $('#form-pump-add').serialize());
+        }
+    }
+</script>
+</body>
+</html>

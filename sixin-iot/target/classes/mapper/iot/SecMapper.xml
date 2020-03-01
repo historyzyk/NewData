@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SecMapper">
+
+    <resultMap type="com.sixin.iot.domain.Security" id="SecurityResult">
+        <id property="mid" column="mid" />
+        <result property="content" column="content"/>
+        <result property="secnum" column="secnum"/>
+        <result property="belong" column="belong"/>
+    </resultMap>
+
+    <select id="selectSecList" resultMap="SecurityResult">
+        select mid,content,secnum,belong,alarm_value from secwarning
+    </select>
+</mapper>

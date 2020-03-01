@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.BoardMapper">
+    <resultMap type="com.sixin.iot.domain.Board" id="BoardResult">
+        <id property="board_id"    column="board_id"    />
+        <result property="control"    column="control"    />
+        <result property="working"    column="working"    />
+    </resultMap>
+    <!--定义selectBoard为查询整表命令-->
+    <sql id="selectBoard">
+    select board_id,control,working from iot_board
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_led
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectBoardList" parameterType="com.sixin.iot.domain.Board" resultMap="BoardResult">
+        <include refid="selectBoard"/>
+         <where>
+           <if test="board_id != null and board_id !='' ">AND  board_id  like concat('%' ,#{board_id },'%')</if>
+           <if test="control!= null  and control!= '' ">AND  control like concat('%' ,#{control},'%')</if>
+           <if test="working != null  and working != '' ">AND  working like concat('%' ,#{working},'%')</if>
+      </where>
+      <!--
+  order by board_id desc
+  -->
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="BoardResult">
+        <include refid="selectBoard"/>
+        where board_id=#{board_id}
+        <!-- select
+         a.board_id as board_id,
+         a.control as control,
+         a.working as working,
+         a.screen_wide as screen_wide,
+         a.screen_high as screen_high,
+         a.screen_status as screen_status
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="board_id != null  and board_id != '' ">and a.board_id like CONCAT(#{board_id},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertBoard" parameterType="com.sixin.iot.domain.Board">
+        insert into iot_board
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="board_id != null and board_id!='' ">board_id,</if>
+        <if test="control!= null  and control!= ''  ">control,</if>
+        <if test="working != null  and working != ''  ">working,</if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+        <if test="board_id != null and board_id!='' ">#{board_id},</if>
+        <if test="control != null  and control != ''  ">#{control},</if>
+        <if test="working != null  and working != ''  ">#{working},</if>
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateBoard" parameterType="com.sixin.iot.domain.Board">
+        update iot_board
+        <set>
+            <if test="board_id != null and board_id !=''">board_id = #{board_id},</if>
+            <if test="control != null  and control != ''  ">control = #{control},</if>
+            <if test="working != null  and working != ''  ">working = #{working},</if>
+        </set>
+        where board_id = #{board_id}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteBoardByid" parameterType="String">
+        delete from iot_board where board_id = #{board_id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteBoardByids" parameterType="String">
+        delete from iot_board where board_id in
+        <foreach item="board_id" collection="array" open="(" separator="," close=")">
+            #{board_id}
+        </foreach>
+    </delete>
+
+    <select id="selectBoardByids" parameterType="java.util.List" resultMap="BoardResult">
+        <include refid="selectBoard"/>
+         where board_id in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+
+
+</mapper>

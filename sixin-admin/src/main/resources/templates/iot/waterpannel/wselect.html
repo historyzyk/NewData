@@ -1,0 +1,50 @@
+ <!DOCTYPE html>
+  <html lang="zh" xmlns:th="http://www.thymeleaf.org">
+ <head>
+     <meta charset="UTF-8">
+     <title>水质数据查询</title>
+     <meta name="viewport" content="width=device-width, initial-scale=0.75">
+</head>
+<body>
+<h1 align="center">按编号查询</h1>
+<table>
+    <thead>
+    <tr>
+        <th>水质数据id</th>
+        <th>地区id</th>
+        <th>水温</th>
+        <th>酸碱度</th>
+        <th>总氮含量</th>
+        <th>总磷含量</th>
+        <th>氰化物含量</th>
+        <th>硫化物含量</th>
+        <th>氟化物含量</th>
+        <th>大肠杆菌含量</th>
+        <th>采集人员</th>
+        <th>采集时间</th>
+        <th>是否有效</th>
+    </tr>
+    </thead>
+    <tbody th:each="i:${data}">
+    <tr >
+        <td th:text="${i.id}"></td>
+        <td th:text="${i.aid}"></td>
+        <td th:text="${i.tem}"></td>
+        <td th:text="${i.ph}"></td>
+        <td th:text="${i.ndata}"></td>
+        <td th:text="${i.pdata}"></td>
+        <td th:text="${i.qdata}"></td>
+        <td th:text="${i.sdata}"></td>
+        <td th:text="${i.fudata}"></td>
+        <td th:text="${i.bacdata}"></td>
+        <td th:text="${i.sampling_by}"></td>
+        <td th:text=${#dates.format(i.sampling_time,'yyyy年MM月dd日')}></td>
+        <td th:text="${i.remark==0?'否':'是'}"></td>
+    </tr>
+    </tbody>
+</table>
+<center>
+    <a class="back_btn"href="javascript:window.history.go(-1)">返回水质数据主页</a>
+</center>
+</body>
+</html>

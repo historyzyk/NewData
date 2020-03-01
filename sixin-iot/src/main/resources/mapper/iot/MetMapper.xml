@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.MetMapper">
+
+    <resultMap type="com.sixin.iot.domain.MetCount" id="MetCountResult">
+        <result property="id" column="id"/>
+        <result property="rname" column="rname"/>
+        <result property="rtime" column="time"/>
+        <result property="rdata" column="data"/>
+    </resultMap>
+
+    <select id="selectMet" resultMap="MetCountResult">
+        select id,rname,data,time from temp_data
+    </select>
+
+</mapper>

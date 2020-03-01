@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.WaterMapper">
+    <resultMap type="com.sixin.iot.domain.Water" id="WaterResult">
+        <result property="wid"    column="wid"    />
+        <result property="type"    column="type"    />
+        <result property="area"    column="area"    />
+        <result property="temperature"    column="temperature"    />
+        <result property="color"    column="color"    />
+        <result property="turbidity"    column="turbidity"    />
+        <result property="ph"  column="ph"  />
+        <result property="electric" column="electric" />
+        <result property="seston" column="seston" />
+        <result property="oxygen" column="oxygen" />
+        <result property="poison" column="poison" />
+        <result property="creator" column="creator" />
+        <result property="creatime" column="creatime" />
+    </resultMap>
+
+    <!--定义selectWater为查询整表命令-->
+    <sql id="selectWater">
+    select wid,type,area,temperature,color,turbidity,ph,seston,electric,oxygen,poison,creator,creatime from iot_water
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_environl
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectWaterList" parameterType="com.sixin.iot.domain.Water" resultMap="WaterResult">
+        <include refid="selectWater"/>
+        <where>
+            <if test="wid != null and wid!='' "> AND wid like concat('%', #{wid}, '%')</if>
+            <if test="type!= null  and type!= '' "> AND type like concat('%', #{type}, '%')</if>
+            <if test="area != null  and area != '' "> AND area like concat('%', #{area}, '%')</if>
+            <if test="temperature != null  and temperature != '' "> AND temperature like concat('%', #{temperature}, '%')</if>
+            <if test="color != null  and color != '' "> AND color like concat('%', #{color}, '%')</if>
+            <if test="turbidity != null  and turbidity != '' "> AND turbidity like concat('%', #{turbidity}, '%')</if>
+            <if test="ph != null  and ph != '' "> AND ph like concat('%', #{ph}, '%')</if>
+            <if test="seston !=null and seston !='' ">AND seston like concat('%', #{seston}, '%')</if>
+            <if test="electric !=null and electric !='' ">AND electric like concat('%', #{electric}, '%')</if>
+            <if test="oxygen !=null and oxygen !='' ">AND oxygen like concat('%', #{oxygen}, '%')</if>
+            <if test="poison !=null and poison !='' ">AND poison like concat('%', #{poison}, '%')</if>
+            <if test="creator !=null and creator !='' ">AND creator like concat('%', #{creator}, '%')</if>
+            <if test="creatime !=null and creatime !='' ">AND creatime like concat('%', #{creatime}, '%')</if>
+        </where>
+
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="WaterResult">
+        <include refid="selectWater"/>
+        where wid=#{wid}
+        <!-- select
+         a.wid as wid,
+         a.type as type,
+         a.area as area,
+         a.temperature as temperature,
+         a.color as color,
+         a.turbidity as turbidity
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="wid != null  and wid != '' ">and a.wid like CONCAT(#{wid},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertWater" parameterType="com.sixin.iot.domain.Water">
+        insert into iot_water
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="wid != null and wid!='' ">wid,</if>
+            <if test="type!= null  and type!= ''  ">type,</if>
+            <if test="area != null  and area != ''  ">area,</if>
+            <if test="temperature != null  and temperature != ''  ">temperature,</if>
+            <if test="color != null  and color != ''  ">color,</if>
+            <if test="turbidity != null  and turbidity != ''  ">turbidity,</if>
+            <if test="ph != null and ph !='' ">ph,</if>
+            <if test="seston != null and seston != '' ">seston,</if>
+            <if test="electric != null and electric !='' ">electric,</if>
+            <if test="oxygen !=null and oxygen !=''">oxygen,</if>
+            <if test="poison !=null and poison !=''">poison,</if>
+            <if test="creator !=null and creator !=''">creator,</if>
+            creatime
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="wid != null and wid!='' ">#{wid},</if>
+            <if test="type != null  and type != ''  ">#{type},</if>
+            <if test="area != null  and area != ''  ">#{area},</if>
+            <if test="temperature != null  and temperature != ''  ">#{temperature},</if>
+            <if test="color != null  and color != ''  ">#{color},</if>
+            <if test="turbidity != null  and turbidity != ''  ">#{turbidity},</if>
+            <if test="ph !=null and ph !='' ">#{ph},</if>
+            <if test="seston !=null and seston !='' ">#{seston},</if>
+            <if test="electric !=null and electric !=''">#{electric},</if>
+            <if test="oxygen !=null and oxygen !=''">#{oxygen},</if>
+            <if test="poison !=null and poison !=''">#{poison},</if>
+            <if test="creator !=null and creator !=''">#{creator},</if>
+            sysdate()
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateWater" parameterType="com.sixin.iot.domain.Water">
+        update iot_water
+        <set>
+            <if test="wid != null and wid !=''">wid = #{wid},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="area != null  and area != ''  ">area = #{area},</if>
+            <if test="temperature != null  and temperature != ''  ">temperature = #{temperature},</if>
+            <if test="color != null  and color != ''  ">color = #{color},</if>
+            <if test="turbidity != null  and turbidity != ''  ">turbidity = #{turbidity},</if>
+            <if test="ph !=null and ph != ''">ph = #{ph},</if>
+            <if test="seston != null and seston != ''">seston = #{seston},</if>
+            <if test="electric !=null and electric !=''">electric = #{electric},</if>
+            <if test="oxygen !=null and oxygen !='' ">oxygen = #{oxygen},</if>
+            <if test="poison !=null and poison !='' ">poison = #{poison},</if>
+            <if test="creatime != null and creatime  !=''">creatime  = #{creatime },</if>
+            <if test="creator != null and creator  !=''">creator  = #{creator },</if>
+        </set>
+        where wid = #{wid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteWaterByid" parameterType="String">
+        delete from iot_water where wid = #{wid}
+    </delete>
+
+    <!--批量删除 -->
+    <delete id="deleteWaterByids" parameterType="String">
+        delete from iot_water where wid in
+        <foreach item="wid" collection="array" open="(" separator="," close=")">
+            #{wid}
+        </foreach>
+    </delete>
+    <select id="selectWaterListByids" parameterType="java.util.List" resultMap="WaterResult">
+        <include refid="selectWater"/>
+        where wid in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+</mapper>

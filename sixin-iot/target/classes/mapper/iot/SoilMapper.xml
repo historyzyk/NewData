@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.SoilMapper">
+    <resultMap type="com.sixin.iot.domain.Soil" id="SoilResult">
+        <result property="sid"    column="sid"    />
+        <result property="type"    column="type"    />
+        <result property="area"    column="area"    />
+        <result property="depth"    column="depth"    />
+        <result property="ph"    column="ph"    />
+        <result property="water"    column="water"    />
+        <result property="sailnity"  column="sailnity"  />
+        <result property="organic" column="organic" />
+        <result property="creator" column="creator" />
+        <result property="creatime" column="creatime" />
+    </resultMap>
+    <!--定义selectSoil为查询整表命令-->
+    <sql id="selectSoil">
+    select sid,type,area,depth,ph,water,sailnity,creator,organic,creatime from iot_soil
+    </sql>
+    <!--统计表中记录数
+    <select id="countall" resultType="Integer">
+        select
+               count(*)
+        from iot_soil
+    </select>
+    -->
+    <!--查询表的所有列表信息-->
+    <select id="selectSoilList" parameterType="com.sixin.iot.domain.Soil" resultMap="SoilResult">
+        <include refid="selectSoil"/>
+        <where>
+            <if test="sid != null and sid != '' "> AND sid like concat('%', #{sid}, '%')</if>
+            <if test="type != null and type != '' "> AND type like concat('%', #{type}, '%')</if>
+            <if test="area != null and area != '' "> AND area like concat('%', #{area}, '%')</if>
+            <if test="depth != null and depth != '' "> AND depth like concat('%', #{depth}, '%')</if>
+            <if test="ph != null and ph != '' "> AND ph like concat('%', #{ph}, '%')</if>
+            <if test="water != null and water != '' "> AND water like concat('%', #{water}, '%')</if>
+            <if test="sailnity != null and sailnity != '' "> AND sailnity like concat('%', #{sailnity}, '%')</if>
+            <if test="creator != null and creator != '' "> AND creator like concat('%', #{creator}, '%')</if>
+            <if test="organic != null and organic != '' "> AND organic like concat('%', #{organic}, '%')</if>
+            <if test="creatime !=null and creatime !='' "> AND creatime like concat('%', #{creatime}, '%')</if>
+        </where>
+
+    </select>
+
+    <!--根据id查询信息-->
+    <select id="selectByid" parameterType="String" resultMap="SoilResult">
+        <include refid="selectSoil"/>
+        where sid=#{sid}
+        <!-- select
+         a.sid as sid,
+         a.type as type,
+         a.area as area,
+         a.depth as depth,
+         a.ph as ph,
+         a.water as water
+         from iot_led a
+         -->
+        <!--
+        <where>
+            <if test="sid != null  and sid != '' ">and a.sid like CONCAT(#{sid},'%')</if>
+            <if test="aname != null  and aname != '' ">and a.aname like CONCAT('%',#{aname},'%')</if>
+        </where>
+        -->
+    </select>
+    <!--向表中插入新数据-->
+    <insert id="insertSoil" parameterType="com.sixin.iot.domain.Soil">
+        insert into iot_soil
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sid != null and sid!='' ">sid,</if>
+            <if test="type!= null  and type!= ''  ">type,</if>
+            <if test="area != null  and area != ''  ">area,</if>
+            <if test="depth != null  and depth != ''  ">depth,</if>
+            <if test="ph != null  and ph != ''  ">ph,</if>
+            <if test="water != null  and water != ''  ">water,</if>
+            <if test="sailnity != null and sailnity !='' ">sailnity,</if>
+            <if test="creator != null and creator != '' ">creator,</if>
+            <if test="organic != null and organic !='' ">organic,</if>
+            creatime
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="sid != null and sid!='' ">#{sid},</if>
+            <if test="type != null  and type != ''  ">#{type},</if>
+            <if test="area != null  and area != ''  ">#{area},</if>
+            <if test="depth != null  and depth != ''  ">#{depth},</if>
+            <if test="ph != null  and ph != ''  ">#{ph},</if>
+            <if test="water != null  and water != ''  ">#{water},</if>
+            <if test="sailnity !=null and sailnity !='' ">#{sailnity},</if>
+            <if test="creator !=null and creator !='' ">#{creator},</if>
+            <if test="organic !=null and organic !=''">#{organic},</if>
+            sysdate()
+        </trim>
+    </insert>
+    <!--更新数据-->
+    <update id="updateSoil" parameterType="com.sixin.iot.domain.Soil">
+        update iot_soil
+        <set>
+            <if test="sid != null and sid !=''">sid = #{sid},</if>
+            <if test="type != null  and type != ''  ">type = #{type},</if>
+            <if test="area != null  and area != ''  ">area = #{area},</if>
+            <if test="depth != null  and depth != ''  ">depth = #{depth},</if>
+            <if test="ph != null  and ph != ''  ">ph = #{ph},</if>
+            <if test="water != null  and water != ''  ">water = #{water},</if>
+            <if test="sailnity !=null and sailnity != ''">sailnity = #{sailnity},</if>
+            <if test="organic != null and organic  !=''">organic  = #{organic },</if>
+            <if test="creatime != null and creatime  !=''">creatime  = #{creatime },</if>
+            <if test="creator != null and creator  !=''">creator  = #{creator },</if>
+        </set>
+        where sid = #{sid}
+    </update>
+
+    <!--根据id删除-->
+    <delete id="deleteSoilByid" parameterType="String">
+        delete from iot_soil where sid = #{sid}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteSoilByids" parameterType="String">
+        delete from iot_soil where sid in
+        <foreach item="sid" collection="array" open="(" separator="," close=")">
+            #{sid}
+        </foreach>
+    </delete>
+    <select id="selectSoilListByids" parameterType="java.util.List" resultMap="SoilResult">
+        <include refid="selectSoil"/>
+        where sid in
+        <foreach collection="list" item="sfid" open="(" close=")" separator=",">
+            #{sfid}
+        </foreach>
+    </select>
+</mapper>

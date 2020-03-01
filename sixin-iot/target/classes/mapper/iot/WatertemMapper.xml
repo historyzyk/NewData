@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.WatertemMapper">
+    <resultMap type="com.sixin.iot.domain.Watertem" id="WatertemResult">
+        <result property="tid"    column="tid"  />
+        <result property="aid"    column="aid"  />
+        <result property="tem"    column="tem"   />
+        <result property="level"    column="level"   />
+        <result property="remark"    column="remark"  />
+    </resultMap>
+
+    <select id="selecttem"  resultMap="WatertemResult">
+      select
+        aid,tem
+        from tem_data
+        where remark=1
+
+    </select>
+
+
+</mapper>

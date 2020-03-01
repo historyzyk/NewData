@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+<div class="wrapper wrapper-content animated fadeInRight ibox-content">
+    <form class="form-horizontal m" id="form-environl-edit" th:object="${environl}">
+        <input id="hid" name="hid" type="hidden" th:field="*{hid}"/>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">环境温度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="temperature" id="temperature" th:field="*{temperature}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">环境湿度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="humidity" id="humidity" th:field="*{humidity}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">风速：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="speed" id="speed" th:field="*{speed}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">风向：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="direction" id="direction" th:field="*{direction}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">光照强度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="intensity" id="intensity" th:field="*{intensity}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">大气压强：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="pressure" id="pressure" th:field="*{pressure}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">PM2.5浓度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="pm" id="pm" th:field="*{pm}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">二氧化碳浓度：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="ppm" id="ppm" th:field="*{ppm}">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-sm-3 control-label">设备状态（0-关，1-开）：</label>
+            <div class="col-sm-8">
+                <input class="form-control" type="text" name="status" id="status" th:field="*{status}">
+            </div>
+        </div>
+    </form>
+</div>
+<div th:include="include::footer"></div>
+<script type="text/javascript">
+    var prefix = ctx + "iot/environl";
+    $("#form-environl-edit").validate({
+        rules:{
+            xxxx:{
+                required:true,
+            },
+        }
+    });
+    function submitHandler() {
+        if ($.validate.form()) {
+            $.operate.save(prefix + "/edit", $('#form-environl-edit').serialize());
+        }
+    }
+</script>
+</body>
+</html>

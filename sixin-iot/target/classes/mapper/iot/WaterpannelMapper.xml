@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+ <!DOCTYPE mapper
+         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sixin.iot.mapper.WaterpannelMapper">
+
+    <resultMap type="com.sixin.iot.domain.Waterpannel" id="WaterpannelResult">
+        <result property="id"    column="id"  />
+        <result property="aid"    column="aid"  />
+        <result property="tem"    column="tem"   />
+        <result property="ph"    column="ph"   />
+        <result property="ndata"    column="N_data"  />
+        <result property="pdata"    column="P_data"  />
+        <result property="qdata"    column="Q_data"  />
+        <result property="sdata"    column="S_data"  />
+        <result property="fudata"    column="Fu_data"  />
+        <result property="bacdata"    column="Bac_data" />
+        <result property="sampling_by"    column="sampling_by"  />
+        <result property="sampling_time"    column="sampling_time"   />
+        <result property="remark"    column="remark"  />
+    </resultMap>
+
+
+
+
+  <sql id="selectWaterpannelVo">
+        select
+        id,aid,tem,ph,N_data,P_data,Q_data,S_data,Fu_data,Bac_data,sampling_by,
+        sampling_time,remark from water_data
+    </sql>
+
+    <select id="selectWaterpannelList" resultMap="WaterpannelResult">
+        select
+        id,aid,tem,ph,N_data,P_data,Q_data,S_data,Fu_data,Bac_data,sampling_by,
+        sampling_time,remark from water_data
+       order by id
+
+    </select>
+
+    <select id="selectListById" parameterType="Integer" resultMap="WaterpannelResult">
+      select
+        id,aid,tem,ph,N_data,P_data,Q_data,S_data,Fu_data,Bac_data,sampling_by,
+        sampling_time,remark
+        from water_data
+         where id=#{id}
+    </select>
+
+
+<!--    <select id="addList"  resultMap="WaterpannelResult">-->
+<!--     INSERT INTO water_data (id,aid,tem,ph,N_data,P_data,Q_data,S_data,Fu_data,Bac_data,sampling_by,sampling_time,remark) VALUES (#{name},#{pwd},#{sexy},#{birthday})-->
+<!--    </select>-->
+
+
+
+    <select id="deleteListById" parameterType="Integer" resultMap="WaterpannelResult">
+      delete
+        from water_data
+         where id=#{id}
+    </select>
+
+
+
+
+</mapper>
